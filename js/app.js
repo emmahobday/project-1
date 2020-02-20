@@ -24,14 +24,22 @@ function setupGame() {
   // Controlling Jeff Goldblum
   document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowRight') {
-      if (jeffPosition === cells.length - 1 || jeffPosition % width === width - 1 || cells[jeffPosition + 1].classList.contains('barrier')) {
+      if (jeffPosition === 161) {
+        cells[jeffPosition].classList.remove('jeff')
+        jeffPosition = 143
+        cells[jeffPosition].classList.add('jeff')
+      } else if (jeffPosition === cells.length - 1 || jeffPosition % width === width - 1 || cells[jeffPosition + 1].classList.contains('barrier')) {
         return
       }
       cells[jeffPosition].classList.remove('jeff')
       jeffPosition += 1
       cells[jeffPosition].classList.add('jeff')
     } else if (event.key === 'ArrowLeft') {
-      if (jeffPosition === 0 || jeffPosition % width === 0 || cells[jeffPosition - 1].classList.contains('barrier')) {
+      if (jeffPosition === 144) {
+        cells[jeffPosition].classList.remove('jeff')
+        jeffPosition = 162
+        cells[jeffPosition].classList.add('jeff')
+      } else if (jeffPosition === 0 || jeffPosition % width === 0 || cells[jeffPosition - 1].classList.contains('barrier')) {
         return
       }
       cells[jeffPosition].classList.remove('jeff')
