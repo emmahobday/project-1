@@ -16,6 +16,12 @@ h1 {
 
 .heading {
 width: 300px;
+margin: 20px auto;
+}
+
+.logo {
+  width: 170px;
+  opacity: 100%;
 }
 
 main {
@@ -31,41 +37,59 @@ main {
   flex-flow: row nowrap;
   justify-content: center;
   border: black 1px;
-  background-color: rgba(220, 220, 220, 0.8);
+  background-color: rgba(220, 220, 220, 1);
   align-items: center;
 }
 
 .baritems {
-  margin: 2px 40px;
-  font-size: 28px;
+  margin: 2px 20px;
+  font-size: 22px;
 }
 
 .gamearea {
   display: flex;
   flex-flow: row nowrap;
-  height: 90vh;
+  height: 98vh;
   justify-content: space-evenly;
 }
 
 .instructions {
   /* flex-grow: 1; */
   width: 30%;
-  height: 90%;
+  height: 95%;
   margin: 10px;
   border: 1px solid black;
   padding: 20px;
   background-color: white;
   opacity: 50%;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
 }
+
+.startgame {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.starttext {
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+button {
+  border: 2px solid black;
+  background-color: black;
+}
+
 
 .grid {
   /* flex-grow: 3; */
   display: flex;
   flex-flow: row wrap;
-  width: 600px;
-  height: 600px;
+  width: 684px;
+  height: 684px;
   /* border: 1px solid black; */
   /* margin: 10px; */
   padding: 20px;
@@ -76,14 +100,36 @@ main {
   border: 1px solid black;
   width: 5.55%;
   height: 5.55%;
-  background-color: rgba(220, 220, 220, 0.4);
+  background-color: rgba(220, 220, 220, 0.6);
 }
 
 .jeff {
- background-image: url(/images/jeff.jpeg);
+ /* background-image: url(/images/jeff.jpeg); */
+ background-image: url(/images/shirtless-jeff-transparent.png);
  background-size: contain;
+ transform: scale(1.4);
 }
 
 .barrier {
   background-color: black;
+}
+
+.food {
+  background-image: url(/images/golden-egg.png);
+  background-size: contain;
+}
+
+.special {
+  background-image: url(/images/shaving-cream-transparent.png);
+  background-size: contain;
+}
+
+.dinosaur {
+  background-image: url(/images/dinosaurs/dinosaur1\ copy.png);
+  background-size: contain;
+}
+
+.flashingDino {
+  background-image: url(/images/dinosaurs/dinogif.gif);
+  background-size: contain;
 }
