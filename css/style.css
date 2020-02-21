@@ -111,7 +111,7 @@ button {
  /* background-image: url(/images/jeff.jpeg); */
  background-image: url(/images/shirtless-jeff-transparent.png);
  background-size: contain;
- transform: scale(1.4);
+ transform: scale(1.3);
 }
 
 .barrier {
@@ -129,7 +129,7 @@ button {
 }
 
 .special {
-  background-image: url(/images/shaving-cream-transparent.png);
+  background-image: url(/images/laura-dern-transparent.png);
   background-size: contain;
 }
 
