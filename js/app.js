@@ -8,10 +8,18 @@
 
 //list of tasty bugs
 // livesDisplay isn't updating with hearts - works with numbers, hearts update if I update line 23, but not sure yet why it isn't updating when the code runs
-// dino3 sometimes stops and I DONT KNOW WHY HE IS STUPID AND SO IS CODING
-// Need to now repeat flashing dino logic x4 -- search doc for dinosaur1 and find places to update. consider using switch statements???
+// the magic tunnel - logic for dinos 2-4 I think
 // what else blocks dinosaurs - barriers, but also...? Holding area SORTED but should dinosaurs go back if the next cell contains a dinosaur?
 // dino 1 still tends to get stuck in corners, but maybe that's just his personality
+
+// MAYBE SOLVED
+// dino3 sometimes stops and I DONT KNOW WHY HE IS STUPID AND SO IS CODING - try adding fourth, return option, and DOUBLE CHECK CODE - issue seems to be when he goes right
+
+// IDEAS TO MAKE IT EXTRA NICE
+// could make flashing dinosaurs flash white for last few seconds...
+// eating multiple flashing dinos in succession could increase points
+// if your score hits a certain amount, some green jelly could appear for an extra life?
+
 // ideas - an array to monitor being stuck in corners. if direction is changed twice back and forth, keep going until you can turn on the cross axis?
 // another idea - calculate angle to determine priority of movement decision.
 // another idea - put dinosaurs into an array (somehow lol), and do the logic forEach rather than writing it all out. 
@@ -27,10 +35,6 @@ function setupGame() {
   let dinosaurTwoPosition = 135
   let dinosaurThreePosition = 153
   let dinosaurFourPosition = 152
-  // let flashOnePosition
-  // let flashTwoPosition
-  // let flashThreePosition
-  // let flashFourPosition
   const dinoPositionsArray = [dinosaurOnePosition, dinosaurTwoPosition, dinosaurThreePosition, dinosaurFourPosition]
   const barriersArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 26, 27, 35, 36, 38, 39, 40, 41, 42, 44, 45, 47, 48, 49, 50, 51, 53, 54, 56, 57, 58, 59, 60, 62, 63, 65, 66, 67, 68, 69, 71, 72, 89, 90, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 107, 108, 114, 119, 125, 126, 127, 128, 129, 130, 132, 134, 135, 137, 139, 140, 141, 142, 143, 152, 153, 162, 163, 164, 165, 166, 168, 173, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 186, 187, 188, 189, 190, 191, 193, 194, 195, 196, 197, 198, 206, 207, 215, 216, 218, 219, 220, 222, 224, 225, 227, 229, 230, 231, 233, 234, 236, 237, 238, 240, 245, 247, 248, 249, 251, 252, 258, 259, 260, 261, 262, 263, 269, 270, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 287, 288, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323]
   const specialArray = [34, 115, 199, 214]
@@ -40,7 +44,7 @@ function setupGame() {
   //livesDisplay is a span which contains just the hearts
   let score = 0
   let lives = 3
-  let livesHearts = '&hearts; '.repeat(lives)
+  const livesHearts = '&hearts; '.repeat(lives)
   console.log(livesHearts)
   livesDisplay.innerHTML = `${livesHearts}`
   const startButton = document.querySelector('startbutton')
@@ -48,7 +52,7 @@ function setupGame() {
   let dinoTwoDirection
   let dinoThreeDirection
   let dinoFourDirection
-  let dinosFlashing = false
+  let pauseDinoMovement = false
 
   function dinoMoveUp() {
     cells[dinosaurOnePosition].classList.remove('dinosaur1')
@@ -145,24 +149,28 @@ function setupGame() {
 
   // oh jeez NOW we need to get the flashing ones moving
   function flashMoveUp() {
-    cells[dinosaurOnePosition].classList.remove('flashingDino1')
+    cells[dinosaurOnePosition].classList.remove('flashingDino')
     dinosaurOnePosition -= width
-    cells[dinosaurOnePosition].classList.add('flashingDino1')
+    cells[dinosaurOnePosition].classList.add('flashingDino')
+    dinoOneDirection = 'up'
   }
   function flashMoveRight() {
-    cells[dinosaurOnePosition].classList.remove('flashingDino1')
+    cells[dinosaurOnePosition].classList.remove('flashingDino')
     dinosaurOnePosition += 1
-    cells[dinosaurOnePosition].classList.add('flashingDino1')
+    cells[dinosaurOnePosition].classList.add('flashingDino')
+    dinoOneDirection = 'right'
   }
   function flashMoveLeft() {
-    cells[dinosaurOnePosition].classList.remove('flashingDino1')
+    cells[dinosaurOnePosition].classList.remove('flashingDino')
     dinosaurOnePosition -= 1
-    cells[dinosaurOnePosition].classList.add('flashingDino1')
+    cells[dinosaurOnePosition].classList.add('flashingDino')
+    dinoOneDirection = 'left'
   }
   function flashMoveDown() {
-    cells[dinosaurOnePosition].classList.remove('flashingDino1')
+    cells[dinosaurOnePosition].classList.remove('flashingDino')
     dinosaurOnePosition += width
-    cells[dinosaurOnePosition].classList.add('flashingDino1')
+    cells[dinosaurOnePosition].classList.add('flashingDino')
+    dinoOneDirection = 'down'
   }
   function flashTwoMoveUp() {
     cells[dinosaurTwoPosition].classList.remove('flashingDino2')
@@ -319,34 +327,77 @@ function setupGame() {
     }
     // logic for hitting the special dr sattler!
 
-    if (cells[jeffPosition].classList.contains('special')) {
+    if (cells[jeffPosition].classList.contains('special') && !pauseDinoMovement) {
       runSpecial()
     }
 
     // logic for hitting a dinosaur and losing a life
-    // THIS NEEDS UPDATING x 4
-    if (cells[jeffPosition].classList.contains('dinosaur')) {
-      cells[jeffPosition].classList.remove('jeff')
-      cells[jeffPosition].classList.remove('dinosaur')
-      lives -= 1
-      console.log(lives)
-      livesDisplay.innerHTML = `${livesHearts}`
-      //unsure why livesDisplay isn't updating...
-      jeffPosition = 241
-      cells.forEach((cell) => {
-        if (cell.classList.contains('dinosaur')) {
-          cell.classList.remove('dinosaur')
-        }
-      })
-      cells[134].classList.add('dinosaur')
-      cells[135].classList.add('dinosaur')
-      cells[152].classList.add('dinosaur')
-      cells[153].classList.add('dinosaur')
-      cells[jeffPosition].classList.add('jeff')
+    if (cells[jeffPosition].classList.contains('dinosaur1')) {
+      caughtByDinosaur()
     }
+    if (cells[jeffPosition].classList.contains('dinosaur2')) {
+      caughtByDinosaur()
+    }
+    if (cells[jeffPosition].classList.contains('dinosaur3')) {
+      caughtByDinosaur()
+    }
+    if (cells[jeffPosition].classList.contains('dinosaur3')) {
+      caughtByDinosaur()
+    }
+
 
     //end of setting up jeff goldblum  
   })
+
+  function caughtByDinosaur() {
+    // THIS IS SUPER JANKY
+    pauseDinoMovement = true
+    cells[jeffPosition].classList.remove('jeff')
+    cells[dinosaurOnePosition].classList.remove('dinosaur1')
+    cells[dinosaurTwoPosition].classList.remove('dinosaur2')
+    cells[dinosaurThreePosition].classList.remove('dinosaur3')
+    cells[dinosaurFourPosition].classList.remove('dinosaur4')
+    lives -= 1
+    console.log(lives)
+    livesDisplay.innerHTML = `${livesHearts}`
+    //unsure why livesDisplay isn't updating...
+
+    // cells.forEach((cell) => {
+    //   if (cell.classList.contains('dinosaur1')) {
+    //     cell.classList.remove('dinosaur1')
+    //   }
+    //   if (cell.classList.contains('dinosaur2')) {
+    //     cell.classList.remove('dinosaur2')
+    //   }
+    //   if (cell.classList.contains('dinosaur3')) {
+    //     cell.classList.remove('dinosaur3')
+    //   }
+    //   if (cell.classList.contains('dinosaur4')) {
+    //     cell.classList.remove('dinosaur4')
+    //   }
+    //   if (cell.classList.contains('jeff')) {
+    //     cell.classList.remove('jeff')
+    //   }
+    // })
+
+    setTimeout(() => {
+      jeffPosition = 241
+      dinosaurOnePosition = 134
+      dinosaurThreePosition = 153
+      dinosaurTwoPosition = 135
+      dinosaurFourPosition = 152
+      cells[134].classList.add('dinosaur1')
+      cells[135].classList.add('dinosaur2')
+      cells[152].classList.add('dinosaur3')
+      cells[153].classList.add('dinosaur4')
+      cells[jeffPosition].classList.add('jeff')
+      pauseDinoMovement = false
+      dinosaurMovement()
+      dinoTwoMovement()
+      dinoThreeMovement()
+      dinoFourMovement()
+    }, 2000)
+  }
 
   //let's get these dinosaurs moving
 
@@ -396,28 +447,28 @@ function setupGame() {
         dinoFourMoveDown()
         counter += 1
         break
+      // case 6:
+      //   dinoMoveUp()
+      //   dinoTwoMoveRight()
+      //   dinoThreeMoveDown()
+      //   dinoFourMoveDown()
+      //   counter += 1
+      //   break
+      // case 7:
+      //   dinoMoveUp()
+      //   dinoTwoMoveRight()
+      //   dinoThreeMoveDown()
+      //   dinoFourMoveDown()
+      //   counter += 1
+      //   break
+      // case 8:
+      //   dinoMoveLeft()
+      //   dinoTwoMoveRight()
+      //   dinoThreeMoveDown()
+      //   dinoFourMoveDown()
+      //   counter += 1
+      //   break
       case 6:
-        dinoMoveUp()
-        dinoTwoMoveRight()
-        dinoThreeMoveDown()
-        dinoFourMoveDown()
-        counter += 1
-        break
-      case 7:
-        dinoMoveUp()
-        dinoTwoMoveRight()
-        dinoThreeMoveDown()
-        dinoFourMoveDown()
-        counter += 1
-        break
-      case 8:
-        dinoMoveLeft()
-        dinoTwoMoveRight()
-        dinoThreeMoveDown()
-        dinoFourMoveDown()
-        counter += 1
-        break
-      case 9:
         dinosaurMovement()
         dinoTwoMovement()
         dinoThreeMovement()
@@ -430,10 +481,11 @@ function setupGame() {
   }, 500)
 
   function runSpecial() {
-    // and here we make the dinosaurs flash and retreat
-    // we need to include the change in class (and thus icon)
-    // also need each dinosaur separately
-    // also need escape logic (consider simplest way to do this)
+    // and here we make the dinosaurs flash and retreat DONE
+    // we need to include the change in class (and thus icon) DONE
+    // also need each dinosaur separately DONE
+    // also need escape logic (consider simplest way to do this) DONE
+    // it should last for... 7 seconds? DONE
     // include the points scored
     // include the caught dinosaur disappearing and reappearing after a timeout in the holding area
     // AHA it is carrying on because we need to pause the moveDino() etc functions in a timeout for as long as the flashing timeout lasts!!
@@ -442,25 +494,11 @@ function setupGame() {
     cells[jeffPosition].classList.remove('special')
     score += 1000
     scoreDisplay.innerHTML = `${score}`
-    let dinosFlashing = true
-    console.log(dinosaurOnePosition, dinosaurTwoPosition, dinosaurThreePosition, dinosaurFourPosition)
+    pauseDinoMovement = true
 
-    const removeAnnoyingDinosaurs = setInterval(() => {
-      cells.forEach((cell) => {
-        if (cell.classList.contains('dinosaur1' || 'dinosaur2' || 'dinosaur3' || 'dinosaur4')) {
-          cell.classList.remove('dinosaur1' && 'dinosaur2' && 'dinosaur3' && 'dinosaur4')
-        }
-      })
-      console.log(dinosaurOnePosition, dinosaurTwoPosition, dinosaurThreePosition, dinosaurFourPosition)
-      console.log(cells[dinosaurOnePosition].classList)
-    }, 1000)
-
-    // setTimeout(() => {
-    //   clearInterval(removeAnnoyingDinosaurs)
-    // }, 1)
 
     cells[dinosaurOnePosition].classList.remove('dinosaur1')
-    cells[dinosaurOnePosition].classList.add('flashingDino1')
+    cells[dinosaurOnePosition].classList.add('flashingDino')
     cells[dinosaurTwoPosition].classList.remove('dinosaur2')
     cells[dinosaurTwoPosition].classList.add('flashingDino2')
     cells[dinosaurThreePosition].classList.remove('dinosaur3')
@@ -468,7 +506,52 @@ function setupGame() {
     cells[dinosaurFourPosition].classList.remove('dinosaur4')
     cells[dinosaurFourPosition].classList.add('flashingDino4')
 
-    
+    fleeingDinosaurs()
+
+    // if (cells[jeffPosition].classList.contains('flashingDino')) {
+    //   cells[jeffPosition].classList.remove('flashingDino')
+    //   // STOP THE FLASHING DINO MOVEMENT LOGIC
+    //   score += 1000
+    //   setTimeout(() => {
+    //     cells[134].classList.add('dinosaur1')
+    //     dinosaurOnePosition = 134
+    //   }, 5000)
+    // }
+
+
+    // if cell contains jeff and a flashing dinosaur...
+    //remove flashing dinosaur
+    // add 100 points
+    // set a timeout, and have it reappear as a normal dinosaur in the holding area (one at a time, so correct position), then restart movementlogic
+    //
+
+
+    // WHAT HAPPENS AT THE END OF THE FLASHING SEQUENCE
+    setTimeout(() => {
+      cells[dinosaurOnePosition].classList.remove('flashingDino')
+      cells[dinosaurOnePosition].classList.add('dinosaur1')
+      cells[dinosaurTwoPosition].classList.remove('flashingDino2')
+      cells[dinosaurTwoPosition].classList.add('dinosaur2')
+      cells[dinosaurThreePosition].classList.remove('flashingDino3')
+      cells[dinosaurThreePosition].classList.add('dinosaur3')
+      cells[dinosaurFourPosition].classList.remove('flashingDino4')
+      cells[dinosaurFourPosition].classList.add('dinosaur4')
+      dinosaurMovement()
+      dinoTwoMovement()
+      dinoThreeMovement()
+      dinoFourMovement()
+      pauseDinoMovement = false
+    }, 5000)
+
+    if (!pauseDinoMovement) {
+      return
+    }
+
+    // cells.forEach((cell) => {
+    //   if (cell.classList.contains('dinosaur1')) {
+    //     cell.classList.remove('dinosaur1')
+    //   }
+    // })
 
 
     // setTimeout(() => {
@@ -479,14 +562,20 @@ function setupGame() {
     // cells.forEach((cell) => {
     //   if (cell.classList.contains('dinosaur1')) {
     //     cell.classList.remove('dinosaur1')
-    //     cell.classList.add('flashingDino1')
+    //   }
+
+
+    // cells.forEach((cell) => {
+    //   if (cell.classList.contains('dinosaur1')) {
+    //     cell.classList.remove('dinosaur1')
+    //     cell.classList.add('flashingDino')
     //     setTimeout(() => {
     //       console.log('flashing dinosaur1 lol')
     //       cells.forEach((cell) => {
-    //         if (cell.classList.contains('flashingDino1')) {
-    //           cell.classList.remove('flashingDino1')
+    //         if (cell.classList.contains('flashingDino')) {
+    //           cell.classList.remove('flashingDino')
     //           cell.classList.add('dinosaur1')
-    //           let dinosFlashing = false
+    //           let pauseDinoMovement = false
     //         }
     //       })
     //     }, 5000)
@@ -494,20 +583,422 @@ function setupGame() {
 
     //logic for what happens if you catch a dinosaur when it's flashing!
     // THIS NEEDS UPDATING ONCE THEY MOVE x4
-    if (cells[jeffPosition].classList.contains('flashingDino')) {
-      cells[jeffPosition].classList.remove('flashingDino')
-      lives += 1
-      livesDisplay.innerHTML = `${livesHearts}`
-      setTimeout(() => {
-        //update this line below - where caught dino reappears (this is test cell)
-        cells[304].classList.add('dinosaur')
-      }, 3000)
-    }
+    // if (cells[jeffPosition].classList.contains('flashingDino')) {
+    //   cells[jeffPosition].classList.remove('flashingDino')
+    //   lives += 1
+    //   livesDisplay.innerHTML = `${livesHearts}`
+    //   setTimeout(() => {
+    //     //update this line below - where caught dino reappears (this is test cell)
+    //     cells[304].classList.add('dinosaur')
+    //   }, 3000)
+    // }
+  }
+
+  function fleeingDinosaurs() {
+    const flashingIntervalId = setInterval(() => {
+      if (!pauseDinoMovement) {
+        clearInterval(flashingIntervalId)
+        return
+      } else {
+        // DINOSAUR ONE
+        // case: SAME ROW
+        if ((Math.floor(dinosaurOnePosition / width)) === (Math.floor(jeffPosition / width))) {
+          if (dinosaurOnePosition < jeffPosition) {
+            if (!cells[dinosaurOnePosition - 1].classList.contains('barrier')) {
+              flashMoveLeft()
+            } else if (!cells[dinosaurOnePosition - width].classList.contains('barrier')) {
+              flashMoveUp()
+            } else if (!cells[dinosaurOnePosition + width].classList.contains('barrier')) {
+              flashMoveDown()
+            } else {
+              flashMoveRight()
+            }
+          } else {
+            if (!cells[dinosaurOnePosition + 1].classList.contains('barrier')) {
+              flashMoveRight()
+            } else if (!cells[dinosaurOnePosition - width].classList.contains('barrier')) {
+              flashMoveUp()
+            } else if (!cells[dinosaurOnePosition + width].classList.contains('barrier')) {
+              flashMoveDown()
+            } else {
+              flashMoveLeft()
+            }
+          }
+
+          // case: SAME COLUMN
+        } else if (dinosaurOnePosition % width === jeffPosition % width) {
+          if (jeffPosition > dinosaurOnePosition) {
+            if (!cells[dinosaurOnePosition - width].classList.contains('barrier')) {
+              flashMoveUp()
+            } else if (!cells[dinosaurOnePosition + 1].classList.contains('barrier')) {
+              flashMoveRight()
+            } else if (!cells[dinosaurOnePosition - 1].classList.contains('barrier')) {
+              flashMoveLeft()
+            } else {
+              flashMoveDown()
+            }
+          } else {
+            if (!cells[dinosaurOnePosition + width].classList.contains('barrier')) {
+              flashMoveDown()
+            } else if (!cells[dinosaurOnePosition + 1].classList.contains('barrier')) {
+              flashMoveRight()
+            } else if (!cells[dinosaurOnePosition - 1].classList.contains('barrier')) {
+              flashMoveLeft()
+            } else {
+              flashMoveUp()
+            }
+          }
+
+          // case: jeff is in relative LOWER RIGHT QUADRANT
+        } else if ((jeffPosition > dinosaurOnePosition) && (jeffPosition % width > dinosaurOnePosition % width)) {
+          if (!cells[dinosaurOnePosition - width].classList.contains('barrier')) {
+            flashMoveUp()
+          } else if (!cells[dinosaurOnePosition - 1].classList.contains('barrier')) {
+            flashMoveLeft()
+          } else if (!cells[dinosaurOnePosition + 1].classList.contains('barrier')) {
+            flashMoveRight()
+          } else {
+            flashMoveDown()
+          }
+
+          // case: jeff is in relative LOWER LEFT QUADRANT
+        } else if ((jeffPosition > dinosaurOnePosition) && (jeffPosition % width < dinosaurOnePosition % width)) {
+          if (!cells[dinosaurOnePosition - width].classList.contains('barrier')) {
+            flashMoveUp()
+          } else if (!cells[dinosaurOnePosition + 1].classList.contains('barrier')) {
+            flashMoveRight()
+          } else if (!cells[dinosaurOnePosition - 1].classList.contains('barrier')) {
+            flashMoveLeft()
+          } else {
+            flashMoveDown()
+          }
+
+          // case: jeff is in relative UPPER LEFT QUADRANT
+        } else if ((jeffPosition < dinosaurOnePosition) && (jeffPosition % width < dinosaurOnePosition % width)) {
+          if (!cells[dinosaurOnePosition + width].classList.contains('barrier')) {
+            flashMoveDown()
+          } else if (!cells[dinosaurOnePosition + 1].classList.contains('barrier')) {
+            flashMoveRight()
+          } else if (!cells[dinosaurOnePosition - 1].classList.contains('barrier')) {
+            flashMoveLeft()
+          } else {
+            flashMoveUp()
+          }
+
+          // case: jeff is in relative UPPER RIGHT QUADRANT
+        } else if ((jeffPosition < dinosaurOnePosition) && (jeffPosition % width > dinosaurOnePosition % width)) {
+          if (!cells[dinosaurOnePosition + width].classList.contains('barrier')) {
+            flashMoveDown()
+          } else if (!cells[dinosaurOnePosition - 1].classList.contains('barrier')) {
+            flashMoveLeft()
+          } else if (!cells[dinosaurOnePosition + 1].classList.contains('barrier')) {
+            flashMoveRight()
+          } else {
+            flashMoveUp()
+          }
+        }
+
+        // DINOSAUR TWO
+        // case: SAME ROW
+        if ((Math.floor(dinosaurTwoPosition / width)) === (Math.floor(jeffPosition / width))) {
+          if (dinosaurTwoPosition < jeffPosition) {
+            if (!cells[dinosaurTwoPosition - 1].classList.contains('barrier')) {
+              flashTwoMoveLeft()
+            } else if (!cells[dinosaurTwoPosition - width].classList.contains('barrier')) {
+              flashTwoMoveUp()
+            } else if (!cells[dinosaurTwoPosition + width].classList.contains('barrier')) {
+              flashTwoMoveDown()
+            } else {
+              flashTwoMoveRight()
+            }
+          } else {
+            if (!cells[dinosaurTwoPosition + 1].classList.contains('barrier')) {
+              flashTwoMoveRight()
+            } else if (!cells[dinosaurTwoPosition - width].classList.contains('barrier')) {
+              flashTwoMoveUp()
+            } else if (!cells[dinosaurTwoPosition + width].classList.contains('barrier')) {
+              flashTwoMoveDown()
+            } else {
+              flashTwoMoveLeft()
+            }
+          }
+
+          // case: SAME COLUMN
+        } else if (dinosaurTwoPosition % width === jeffPosition % width) {
+          if (jeffPosition > dinosaurTwoPosition) {
+            if (!cells[dinosaurTwoPosition - width].classList.contains('barrier')) {
+              flashTwoMoveUp()
+            } else if (!cells[dinosaurTwoPosition + 1].classList.contains('barrier')) {
+              flashTwoMoveRight()
+            } else if (!cells[dinosaurTwoPosition - 1].classList.contains('barrier')) {
+              flashTwoMoveLeft()
+            } else {
+              flashTwoMoveDown()
+            }
+          } else {
+            if (!cells[dinosaurTwoPosition + width].classList.contains('barrier')) {
+              flashTwoMoveDown()
+            } else if (!cells[dinosaurTwoPosition + 1].classList.contains('barrier')) {
+              flashTwoMoveRight()
+            } else if (!cells[dinosaurTwoPosition - 1].classList.contains('barrier')) {
+              flashTwoMoveLeft()
+            } else {
+              flashTwoMoveUp()
+            }
+          }
+
+          // case: jeff is in relative LOWER RIGHT QUADRANT
+        } else if ((jeffPosition > dinosaurTwoPosition) && (jeffPosition % width > dinosaurTwoPosition % width)) {
+          if (!cells[dinosaurTwoPosition - width].classList.contains('barrier')) {
+            flashTwoMoveUp()
+          } else if (!cells[dinosaurTwoPosition - 1].classList.contains('barrier')) {
+            flashTwoMoveLeft()
+          } else if (!cells[dinosaurTwoPosition + 1].classList.contains('barrier')) {
+            flashTwoMoveRight()
+          } else {
+            flashTwoMoveDown()
+          }
+
+          // case: jeff is in relative LOWER LEFT QUADRANT
+        } else if ((jeffPosition > dinosaurTwoPosition) && (jeffPosition % width < dinosaurTwoPosition % width)) {
+          if (!cells[dinosaurTwoPosition - width].classList.contains('barrier')) {
+            flashTwoMoveUp()
+          } else if (!cells[dinosaurTwoPosition + 1].classList.contains('barrier')) {
+            flashTwoMoveRight()
+          } else if (!cells[dinosaurTwoPosition - 1].classList.contains('barrier')) {
+            flashTwoMoveLeft()
+          } else {
+            flashTwoMoveDown()
+          }
+
+          // case: jeff is in relative UPPER LEFT QUADRANT
+        } else if ((jeffPosition < dinosaurTwoPosition) && (jeffPosition % width < dinosaurTwoPosition % width)) {
+          if (!cells[dinosaurTwoPosition + width].classList.contains('barrier')) {
+            flashTwoMoveDown()
+          } else if (!cells[dinosaurTwoPosition + 1].classList.contains('barrier')) {
+            flashTwoMoveRight()
+          } else if (!cells[dinosaurTwoPosition - 1].classList.contains('barrier')) {
+            flashTwoMoveLeft()
+          } else {
+            flashTwoMoveUp()
+          }
+
+          // case: jeff is in relative UPPER RIGHT QUADRANT
+        } else if ((jeffPosition < dinosaurTwoPosition) && (jeffPosition % width > dinosaurTwoPosition % width)) {
+          if (!cells[dinosaurTwoPosition + width].classList.contains('barrier')) {
+            flashTwoMoveDown()
+          } else if (!cells[dinosaurTwoPosition - 1].classList.contains('barrier')) {
+            flashTwoMoveLeft()
+          } else if (!cells[dinosaurTwoPosition + 1].classList.contains('barrier')) {
+            flashTwoMoveRight()
+          } else {
+            flashTwoMoveUp()
+          }
+        }
+        // DINOSAUR Three
+        // case: SAME ROW
+        if ((Math.floor(dinosaurThreePosition / width)) === (Math.floor(jeffPosition / width))) {
+          if (dinosaurThreePosition < jeffPosition) {
+            if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+              flashThreeMoveLeft()
+            } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+              flashThreeMoveUp()
+            } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+              flashThreeMoveDown()
+            } else {
+              flashThreeMoveRight()
+            }
+          } else {
+            if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+              flashThreeMoveRight()
+            } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+              flashThreeMoveUp()
+            } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+              flashThreeMoveDown()
+            } else {
+              flashThreeMoveLeft()
+            }
+          }
+
+          // case: SAME COLUMN
+        } else if (dinosaurThreePosition % width === jeffPosition % width) {
+          if (jeffPosition > dinosaurThreePosition) {
+            if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+              flashThreeMoveUp()
+            } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+              flashThreeMoveRight()
+            } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+              flashThreeMoveLeft()
+            } else {
+              flashThreeMoveDown()
+            }
+          } else {
+            if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+              flashThreeMoveDown()
+            } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+              flashThreeMoveRight()
+            } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+              flashThreeMoveLeft()
+            } else {
+              flashThreeMoveUp()
+            }
+          }
+
+          // case: jeff is in relative LOWER RIGHT QUADRANT
+        } else if ((jeffPosition > dinosaurThreePosition) && (jeffPosition % width > dinosaurThreePosition % width)) {
+          if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+            flashThreeMoveUp()
+          } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+            flashThreeMoveLeft()
+          } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+            flashThreeMoveRight()
+          } else {
+            flashThreeMoveDown()
+          }
+
+          // case: jeff is in relative LOWER LEFT QUADRANT
+        } else if ((jeffPosition > dinosaurThreePosition) && (jeffPosition % width < dinosaurThreePosition % width)) {
+          if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+            flashThreeMoveUp()
+          } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+            flashThreeMoveRight()
+          } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+            flashThreeMoveLeft()
+          } else {
+            flashThreeMoveDown()
+          }
+
+          // case: jeff is in relative UPPER LEFT QUADRANT
+        } else if ((jeffPosition < dinosaurThreePosition) && (jeffPosition % width < dinosaurThreePosition % width)) {
+          if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+            flashThreeMoveDown()
+          } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+            flashThreeMoveRight()
+          } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+            flashThreeMoveLeft()
+          } else {
+            flashThreeMoveUp()
+          }
+
+          // case: jeff is in relative UPPER RIGHT QUADRANT
+        } else if ((jeffPosition < dinosaurThreePosition) && (jeffPosition % width > dinosaurThreePosition % width)) {
+          if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+            flashThreeMoveDown()
+          } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+            flashThreeMoveLeft()
+          } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+            flashThreeMoveRight()
+          } else {
+            flashThreeMoveUp()
+          }
+        }
+        // DINOSAUR Four
+        // case: SAME ROW
+        if ((Math.floor(dinosaurFourPosition / width)) === (Math.floor(jeffPosition / width))) {
+          if (dinosaurFourPosition < jeffPosition) {
+            if (!cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
+              flashFourMoveLeft()
+            } else if (!cells[dinosaurFourPosition - width].classList.contains('barrier')) {
+              flashFourMoveUp()
+            } else if (!cells[dinosaurFourPosition + width].classList.contains('barrier')) {
+              flashFourMoveDown()
+            } else {
+              flashFourMoveRight()
+            }
+          } else {
+            if (!cells[dinosaurFourPosition + 1].classList.contains('barrier')) {
+              flashFourMoveRight()
+            } else if (!cells[dinosaurFourPosition - width].classList.contains('barrier')) {
+              flashFourMoveUp()
+            } else if (!cells[dinosaurFourPosition + width].classList.contains('barrier')) {
+              flashFourMoveDown()
+            } else {
+              flashFourMoveLeft()
+            }
+          }
+
+          // case: SAME COLUMN
+        } else if (dinosaurFourPosition % width === jeffPosition % width) {
+          if (jeffPosition > dinosaurFourPosition) {
+            if (!cells[dinosaurFourPosition - width].classList.contains('barrier')) {
+              flashFourMoveUp()
+            } else if (!cells[dinosaurFourPosition + 1].classList.contains('barrier')) {
+              flashFourMoveRight()
+            } else if (!cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
+              flashFourMoveLeft()
+            } else {
+              flashFourMoveDown()
+            }
+          } else {
+            if (!cells[dinosaurFourPosition + width].classList.contains('barrier')) {
+              flashFourMoveDown()
+            } else if (!cells[dinosaurFourPosition + 1].classList.contains('barrier')) {
+              flashFourMoveRight()
+            } else if (!cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
+              flashFourMoveLeft()
+            } else {
+              flashFourMoveUp()
+            }
+          }
+
+          // case: jeff is in relative LOWER RIGHT QUADRANT
+        } else if ((jeffPosition > dinosaurFourPosition) && (jeffPosition % width > dinosaurFourPosition % width)) {
+          if (!cells[dinosaurFourPosition - width].classList.contains('barrier')) {
+            flashFourMoveUp()
+          } else if (!cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
+            flashFourMoveLeft()
+          } else if (!cells[dinosaurFourPosition + 1].classList.contains('barrier')) {
+            flashFourMoveRight()
+          } else {
+            flashFourMoveDown()
+          }
+
+          // case: jeff is in relative LOWER LEFT QUADRANT
+        } else if ((jeffPosition > dinosaurFourPosition) && (jeffPosition % width < dinosaurFourPosition % width)) {
+          if (!cells[dinosaurFourPosition - width].classList.contains('barrier')) {
+            flashFourMoveUp()
+          } else if (!cells[dinosaurFourPosition + 1].classList.contains('barrier')) {
+            flashFourMoveRight()
+          } else if (!cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
+            flashFourMoveLeft()
+          } else {
+            flashFourMoveDown()
+          }
+
+          // case: jeff is in relative UPPER LEFT QUADRANT
+        } else if ((jeffPosition < dinosaurFourPosition) && (jeffPosition % width < dinosaurFourPosition % width)) {
+          if (!cells[dinosaurFourPosition + width].classList.contains('barrier')) {
+            flashFourMoveDown()
+          } else if (!cells[dinosaurFourPosition + 1].classList.contains('barrier')) {
+            flashFourMoveRight()
+          } else if (!cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
+            flashFourMoveLeft()
+          } else {
+            flashFourMoveUp()
+          }
+
+          // case: jeff is in relative UPPER RIGHT QUADRANT
+        } else if ((jeffPosition < dinosaurFourPosition) && (jeffPosition % width > dinosaurFourPosition % width)) {
+          if (!cells[dinosaurFourPosition + width].classList.contains('barrier')) {
+            flashFourMoveDown()
+          } else if (!cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
+            flashFourMoveLeft()
+          } else if (!cells[dinosaurFourPosition + 1].classList.contains('barrier')) {
+            flashFourMoveRight()
+          } else {
+            flashFourMoveUp()
+          }
+        }
+      }
+    }, 500)
   }
 
   function dinosaurMovement() {
+    // if (pauseDinoMovement === true) {
+    //   return
+    // }  
     const dinoIntervalId = setInterval(() => {
-      if (dinosFlashing = true) {
+      if (pauseDinoMovement) {
         clearInterval(dinoIntervalId)
         return
       } else {
@@ -754,7 +1245,7 @@ function setupGame() {
     // create array of location history - push location value each time.
     // create variable dinotwodirection and log to it the name of the function just called (updownleftright). then if that variable is called 'up', options are 'up, left, right' (check dirctions and randoselect/lookat jeff)
     const dinoTwoIntervalId = setInterval(() => {
-      if (dinosFlashing = true) {
+      if (pauseDinoMovement) {
         clearInterval(dinoTwoIntervalId)
         return
       } else {
@@ -924,7 +1415,7 @@ function setupGame() {
   }
   function dinoThreeMovement() {
     const dinoThreeIntervalId = setInterval(() => {
-      if (dinosFlashing = true) {
+      if (pauseDinoMovement) {
         clearInterval(dinoThreeIntervalId)
         return
       } else {
@@ -942,8 +1433,10 @@ function setupGame() {
                 dinoThreeMoveLeft()
               } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 dinoThreeMoveUp()
-              } else {
+              } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
                 dinoThreeMoveRight()
+              } else {
+                dinoThreeMoveDown()
               }
 
               // else if jeff is to the LEFT
@@ -952,8 +1445,10 @@ function setupGame() {
                 dinoThreeMoveRight()
               } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 dinoThreeMoveUp()
-              } else {
+              } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
                 dinoThreeMoveLeft()
+              } else {
+                dinoThreeMoveDown()
               }
             }
 
@@ -973,8 +1468,10 @@ function setupGame() {
                 }
               } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
                 dinoThreeMoveLeft()
-              } else {
+              } else if (!cells[dinosaurThreePosition + 1].classList) {
                 dinoThreeMoveRight()
+              } else {
+                dinoThreeMoveDown()
               }
 
               // else if jeff is to your right....
@@ -990,8 +1487,10 @@ function setupGame() {
                 dinoThreeMoveUp()
               } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
                 dinoThreeMoveRight()
-              } else {
+              } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
                 dinoThreeMoveLeft()
+              } else {
+                dinoThreeMoveDown()
               }
               // else if jeff is to your left...
             } else if (dinosaurThreePosition % width > jeffPosition % width) {
@@ -1006,8 +1505,10 @@ function setupGame() {
                 dinoThreeMoveUp()
               } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
                 dinoThreeMoveLeft()
-              } else {
+              } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
                 dinoThreeMoveRight()
+              } else {
+                dinoThreeMoveDown()
               }
             }
 
@@ -1026,8 +1527,10 @@ function setupGame() {
                 dinoThreeMoveRight()
               } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
                 dinoThreeMoveLeft()
-              } else {
+              } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 dinoThreeMoveUp()
+              } else {
+                dinoThreeMoveDown()
               }
               // if he's to the left of you...
             } else if (dinosaurThreePosition % width > jeffPosition % width) {
@@ -1042,8 +1545,10 @@ function setupGame() {
                 }
               } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 dinoThreeMoveUp()
-              } else {
+              } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
                 dinoThreeMoveRight()
+              } else {
+                dinoThreeMoveDown()
               }
               // if he's to the right of you...
             } else if (dinosaurThreePosition % width < jeffPosition % width) {
@@ -1058,8 +1563,10 @@ function setupGame() {
                 }
               } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 dinoThreeMoveUp()
-              } else {
+              } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
                 dinoThreeMoveLeft()
+              } else {
+                dinoThreeMoveDown()
               }
             }
           }
@@ -1080,10 +1587,13 @@ function setupGame() {
                 dinoThreeMoveRight()
               } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
                 dinoThreeMoveDown()
-              } else {
+              } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
                 dinoThreeMoveLeft()
+              } else {
+                dinoThreeMoveUp()
               }
             }
+            // UP TO HERE HAVE ADDED IN THE OPTION TO GO BACK ON YOURSELF
             // if you're not in the same row and jeff is ABOVE...
           } else if (jeffPosition < dinosaurThreePosition) {
             // if he's in the column above you...
@@ -1327,6 +1837,12 @@ function setupGame() {
           }
 
         } else if (dinoThreeDirection === 'right') {
+          if (dinosaurThreePosition === 161) {
+            cells[dinosaurThreePosition].classList.remove('dinosaur3')
+            dinosaurThreePosition = 141
+            cells[dinosaurThreePosition].classList.add('dinosaur3')
+            dinoThreeDirection = 'right'
+          }
           console.log(dinoThreeDirection)
           // if in the same row...
           if (Math.floor(dinosaurThreePosition / width) === Math.floor(jeffPosition / width)) {
@@ -1342,23 +1858,30 @@ function setupGame() {
                 }
               } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 dinoThreeMoveUp()
-              } else {
+              } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
                 dinoThreeMoveDown()
+              } else {
+                dinoThreeMoveLeft()
               }
               //else if in the same row but jeff is on the left...
             } else {
-              if (!cells[dinosaurThreePosition + width].classList.contains('barrier') && !cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+              if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+                dinoThreeMoveLeft()
+              } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier') && !cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 randomThree = Math.floor(Math.random() * 2)
                 if (randomThree === 0) {
                   dinoThreeMoveUp()
                 } else {
                   dinoThreeMoveDown()
                 }
+              } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+                dinoThreeMoveDown()
+              } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+                dinoThreeMoveUp()
               } else {
                 dinoThreeMoveRight()
               }
             }
-
             // if you're not in the same row and jeff is ABOVE...
           } else if (jeffPosition < dinosaurThreePosition) {
             // if he's in the column above you...
@@ -1367,59 +1890,15 @@ function setupGame() {
                 dinoThreeMoveUp()
               } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
                 dinoThreeMoveRight()
-              } else {
+              } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
                 dinoThreeMoveDown()
-              }
-            }
-            // else if jeff is to your right....
-          } else if (dinosaurThreePosition % width < jeffPosition % width) {
-            if (!cells[dinosaurThreePosition - width].classList.contains('barrier') && !cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
-              randomThree = Math.floor(Math.random() * 2)
-              if (randomThree === 0) {
-                dinoThreeMoveRight()
               } else {
-                dinoThreeMoveUp()
+                dinoThreeMoveLeft()
               }
-            } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
-              dinoThreeMoveUp()
-            } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
-              dinoThreeMoveRight()
-            } else {
-              dinoThreeMoveDown()
-            }
-            // else if jeff is to your left...
-          } else if (dinosaurThreePosition % width > jeffPosition % width) {
-            if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
-              dinoThreeMoveUp()
-            } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier') && !cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
-              randomThree = Math.floor(Math.random() * 2)
-              if (randomThree === 0) {
-                dinoThreeMoveRight()
-              } else {
-                dinoThreeMoveDown()
-              }
-            } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
-              dinoThreeMoveRight()
-            } else {
-              dinoThreeMoveDown()
-            }
 
-            // this is else if jeff is BELOW you, and you just moved RIGHT
-          } else {
-            if (dinosaurThreePosition % width === jeffPosition % width) {
-              // if he's in the column directly below you...
-              if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
-                dinoThreeMoveDown()
-              } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
-                dinoThreeMoveRight()
-              } else {
-                dinoThreeMoveUp()
-              }
-              // if he's to the left of you...
-            } else if (dinosaurThreePosition % width > jeffPosition % width) {
-              if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
-                dinoThreeMoveDown()
-              } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier') && !cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+              // else if jeff is to your right....
+            } else if (dinosaurThreePosition % width < jeffPosition % width) {
+              if (!cells[dinosaurThreePosition - width].classList.contains('barrier') && !cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
                 randomThree = Math.floor(Math.random() * 2)
                 if (randomThree === 0) {
                   dinoThreeMoveRight()
@@ -1428,25 +1907,82 @@ function setupGame() {
                 }
               } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
                 dinoThreeMoveUp()
-              } else {
-                dinoThreeMoveRight()
-              }
-              // if he's to the right of you...
-            } else if (dinosaurThreePosition % width < jeffPosition % width) {
-              if (!cells[dinosaurThreePosition + width].classList.contains('barrier') && !cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
-                randomThree = Math.floor(Math.random() * 2)
-                if (randomThree === 0) {
-                  dinoThreeMoveDown()
-                } else {
-                  dinoThreeMoveRight()
-                }
-              } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
-                dinoThreeMoveDown()
               } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
                 dinoThreeMoveRight()
               } else {
-                dinoThreeMoveUp()
+                dinoThreeMoveDown()
               }
+              // else if jeff is to your left...
+            } else if (dinosaurThreePosition % width > jeffPosition % width) {
+              if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+                dinoThreeMoveUp()
+              } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier') && !cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+                randomThree = Math.floor(Math.random() * 2)
+                if (randomThree === 0) {
+                  dinoThreeMoveRight()
+                } else {
+                  dinoThreeMoveDown()
+                }
+              } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+                dinoThreeMoveRight()
+              } else {
+                dinoThreeMoveDown()
+              }
+
+              // this is else if jeff is BELOW you, and you just moved RIGHT
+            } else {
+              if (dinosaurThreePosition % width === jeffPosition % width) {
+                // if he's in the column directly below you...
+                if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+                  dinoThreeMoveDown()
+                } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+                  dinoThreeMoveRight()
+                } else {
+                  dinoThreeMoveUp()
+                }
+                // if he's to the left of you...
+              } else if (dinosaurThreePosition % width > jeffPosition % width) {
+                if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+                  dinoThreeMoveDown()
+                } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier') && !cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+                  randomThree = Math.floor(Math.random() * 2)
+                  if (randomThree === 0) {
+                    dinoThreeMoveRight()
+                  } else {
+                    dinoThreeMoveUp()
+                  }
+                } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+                  dinoThreeMoveUp()
+                } else {
+                  dinoThreeMoveRight()
+                }
+                // if he's to the right of you...
+              } else if (dinosaurThreePosition % width < jeffPosition % width) {
+                if (!cells[dinosaurThreePosition + width].classList.contains('barrier') && !cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+                  randomThree = Math.floor(Math.random() * 2)
+                  if (randomThree === 0) {
+                    dinoThreeMoveDown()
+                  } else {
+                    dinoThreeMoveRight()
+                  }
+                } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+                  dinoThreeMoveDown()
+                } else if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+                  dinoThreeMoveRight()
+                } else {
+                  dinoThreeMoveUp()
+                }
+              }
+            }
+          } else {
+            if (!cells[dinosaurThreePosition + 1].classList.contains('barrier')) {
+              dinoThreeMoveRight()
+            } else if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
+              dinoThreeMoveLeft()
+            } else if (!cells[dinosaurThreePosition + width].classList.contains('barrier')) {
+              dinoThreeMoveDown()
+            } else if (!cells[dinosaurThreePosition - width].classList.contains('barrier')) {
+              dinoThreeMoveUp()
             }
           }
         }
@@ -1455,7 +1991,7 @@ function setupGame() {
   }
   function dinoFourMovement() {
     const dinoFourIntervalId = setInterval(() => {
-      if (dinosFlashing = true) {
+      if (pauseDinoMovement) {
         clearInterval(dinoFourIntervalId)
         return
       } else {
@@ -1621,7 +2157,6 @@ function setupGame() {
           }
         }
       }
-
     }, 500)
   }
 }
