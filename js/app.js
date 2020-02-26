@@ -1,21 +1,19 @@
-// function loadGame() {
-//   startButton.addEventListener('click', () => {
-//     setupGame()
-//   })
-// }
-
-
+function loadGame() {
+  const startButton = document.querySelector('.startbutton')
+  const audio = document.querySelector('#audio')
+  startButton.addEventListener('click', () => {
+    audio.src = 'sounds/jurassicpark.mp3'
+    audio.play()
+    setupGame()
+  })
+}
 
 //list of tasty bugs
 
-// the magic tunnel - logic for dinos 2-4 I think
-// what else blocks dinosaurs - barriers, but also...? Holding area SORTED but should dinosaurs go back if the next cell contains a dinosaur?
+// what else blocks dinosaurs - barriers, but also...? Holding area SORTED but // make dinosaurs not walk on top of each other  - should dinosaurs go back if the next cell contains a dinosaur? OR pause for one step?
 // dino 1 still tends to get stuck in corners, but maybe that's just his personality
-// make dinosaurs not walk on top of each other 
-
 
 // game over logic - yes, just need to add the animation and scoreboard
-// start game logic - get the button working
 // scoreboard logic
 // refactoring this gigantic mess. MAYBE just have one (best) logic for all dinosaurs.... but how? BUT will that leave them all stuck in similar loops..?
 
@@ -26,12 +24,16 @@
 // lives alert doesnt work
 // getting caught is so frigging glitchy
 // getting caught can be a little glitchy - try the forEach every millisecond maybe! DONE
+// the magic tunnel - logic for dinos 2-4 I think
+// start game logic - get the button working
 
 // IDEAS TO MAKE IT EXTRA NICE
 // could make flashing dinosaurs flash white for last few seconds...
 // eating multiple flashing dinos in succession could increase points
 // if your score hits a certain amount, some green jelly could appear for an extra life?
 // flashing dinos don't know about the tunnel
+// music!
+// startbutton leads to countdown before game starts?
 
 // ideas - an array to monitor being stuck in corners. if direction is changed twice back and forth, keep going until you can turn on the cross axis?
 // another idea - calculate angle to determine priority of movement decision.
@@ -39,6 +41,11 @@
 
 
 function setupGame() {
+  const audio = document.querySelector('#audio')
+  const growl = document.querySelector('#growl')
+  const eggCollectSound = document.querySelector('#eggcollect')
+  const sattler = document.querySelector('#sattler')
+  const caughtdino = document.querySelector('#caughtdino')
   const width = 18
   const gridCellCount = width * width
   const grid = document.querySelector('.grid')
@@ -60,7 +67,7 @@ function setupGame() {
   // const livesHearts = '&hearts; '.repeat(parseInt(lives))
   // console.log(livesHearts)
   livesDisplay.innerHTML = `${'&hearts; '.repeat(lives)}`
-  const startButton = document.querySelector('startbutton')
+
   let randomSelector = 0
   let dinoTwoDirection
   let dinoThreeDirection
@@ -360,10 +367,11 @@ function setupGame() {
       cells[jeffPosition].classList.remove('food')
       score += 100
       eggsRemaining -= 1
+      eggCollectSound.play()
       console.log(eggsRemaining)
-      if (eggsRemaining === 0) {
-        youWin()
-      }
+      // if (eggsRemaining === 0) {
+      //   youWin()
+      // }
       scoreDisplay.innerHTML = `${score}`
     }
     // logic for hitting the special dr sattler!
@@ -400,9 +408,17 @@ function setupGame() {
     console.log('you won!')
     youWon = true
     pauseDinoMovement = true
+    resetFlashOne = true
+    resetFlashTwo = true
+    resetFlashThree = true
+    resetFlashFour = true 
+    setTimeout(() => {
+      alert(`You won! You scored ${score} and have ${lives} remaining lives for a grand total of ${score + (lives * 1000)}!`)
+    }, 600)
   }
 
   function caughtByDinosaur() {
+    growl.play()
     gameEnding = true
     pauseDinoMovement = true
     cells[jeffPosition].classList.remove('jeff')
@@ -479,13 +495,6 @@ function setupGame() {
         counter += 1
         break
       case 5:
-        dinoMoveLeft()
-        dinoTwoMoveUp()
-        dinoThreeMoveRight()
-        dinoFourMoveDown()
-        counter += 1
-        break
-      case 6:
         dinosaurMovement()
         dinoTwoMovement()
         dinoThreeMovement()
@@ -495,7 +504,7 @@ function setupGame() {
       default:
         break
     }
-  }, 300)
+  }, 400)
 
   function runSpecial() {
     // and here we make the dinosaurs flash and retreat DONE
@@ -516,6 +525,7 @@ function setupGame() {
     score += 1000
     scoreDisplay.innerHTML = `${score}`
     pauseDinoMovement = true
+    sattler.play()
 
 
     cells[dinosaurOnePosition].classList.remove('dinosaur1')
@@ -576,7 +586,7 @@ function setupGame() {
       dinoTwoMovement()
       dinoThreeMovement()
       dinoFourMovement()
-    }, 5000)
+    }, 4000)
 
     if (!pauseDinoMovement) {
       return
@@ -632,14 +642,13 @@ function setupGame() {
 
   function catchFlashingDino() {
     console.log('catching1 in theory')
-
-
     // maybe try putting in the one millisecond timer thing that might help
     // but also what am I looking for? the intersection of 'jeff' and 'flashingdino'? or jeffposition, dinosauroneposition? THINK THIS THROUGH.
 
     const intervalId = setInterval(() => {
       if (cells[jeffPosition].classList.contains('flashingDino')) {
         console.log('jeff caught a dinosaur!')
+        caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino')
         score += 1000
         resetFlashOne = true
@@ -648,6 +657,7 @@ function setupGame() {
       }
       if (cells[jeffPosition].classList.contains('flashingDino2')) {
         console.log('jeff caught a dinosaur2!')
+        caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino2')
         score += 1000
         resetFlashTwo = true
@@ -656,6 +666,7 @@ function setupGame() {
       }
       if (cells[jeffPosition].classList.contains('flashingDino3')) {
         console.log('jeff caught a dinosaur3!')
+        caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino3')
         score += 1000
         resetFlashThree = true
@@ -664,6 +675,7 @@ function setupGame() {
       }
       if (cells[jeffPosition].classList.contains('flashingDino4')) {
         console.log('jeff caught a dinosaur4!')
+        caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino4')
         score += 1000
         resetFlashFour = true
@@ -812,7 +824,7 @@ function setupGame() {
           }
         }
       }
-    }, 500)
+    }, 400)
   }
 
 
@@ -920,7 +932,7 @@ function setupGame() {
           }
         }
       }
-    }, 500)
+    }, 400)
   }
 
   function fleeingDinosaur3() {
@@ -1027,7 +1039,7 @@ function setupGame() {
           }
         }
       }
-    }, 500)
+    }, 400)
   }
 
   function fleeingDinosaur4() {
@@ -1134,7 +1146,7 @@ function setupGame() {
           }
         }
       }
-    }, 500)
+    }, 400)
   }
 
   function dinosaurMovement() {
@@ -1376,7 +1388,7 @@ function setupGame() {
       } if (cells[dinosaurOnePosition].classList.contains('jeff')) {
         caughtByDinosaur()
       }
-    }, 500)
+    }, 400)
   }
   // this marks the end of dinosaurMovement()
 
@@ -1568,7 +1580,7 @@ function setupGame() {
       } if (cells[dinosaurTwoPosition].classList.contains('jeff')) {
         caughtByDinosaur()
       }
-    }, 500)
+    }, 400)
   }
   function dinoThreeMovement() {
     const dinoThreeIntervalId = setInterval(() => {
@@ -2146,7 +2158,7 @@ function setupGame() {
       } if (cells[dinosaurThreePosition].classList.contains('jeff')) {
         caughtByDinosaur()
       }
-    }, 500)
+    }, 400)
   }
   function dinoFourMovement() {
     const dinoFourIntervalId = setInterval(() => {
@@ -2242,7 +2254,7 @@ function setupGame() {
             dinosaurFourPosition = 161
             cells[dinosaurFourPosition].classList.add('dinosaur4')
             dinoFourDirection = 'left'
-         // if up, left and down are all free...
+            // if up, left and down are all free...
           } else if (!cells[dinosaurFourPosition - width].classList.contains('barrier') && !cells[dinosaurFourPosition + width].classList.contains('barrier') && !cells[dinosaurFourPosition - 1].classList.contains('barrier')) {
             if (Math.floor(dinosaurFourPosition / width) === Math.floor(jeffPosition / width)) {
               dinoFourMoveLeft()
@@ -2328,14 +2340,15 @@ function setupGame() {
       } if (cells[dinosaurFourPosition].classList.contains('jeff')) {
         caughtByDinosaur()
       }
-    }, 500)
+    }, 400)
   }
 }
 
 
 
 
-window.addEventListener('DOMContentLoaded', setupGame)
+
+window.addEventListener('DOMContentLoaded', loadGame)
 window.addEventListener('keydown', function (e) {
   if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
     e.preventDefault()

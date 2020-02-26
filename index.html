@@ -6,33 +6,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/app.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Averia+Sans+Libre|Nixie+One|Press+Start+2P|Special+Elite&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Averia+Sans+Libre|Nixie+One|Press+Start+2P|Special+Elite&display=swap"
+    rel="stylesheet">
   <title>Jurassic Parc-man</title>
 </head>
 
 <body>
   <main>
-
+    <audio id='audio'></audio>
+    <audio id="growl" src="sounds/growl.mp3"></audio> 
+    <audio id="eggcollect" src="sounds/eggcollect.mp3"></audio>
+    <audio id="sattler" src="sounds/sattler.mp3"></audio>
+    <audio id="caughtdino" src="sounds/caughtdino.mp3"></audio>
     <div class='gamearea'>
       <div class='instructions'>
         <img class='heading' src="/images/imageedit_23_2804624482.png" alt="Jurassic Parc-Man Heading">
         <div class='bar'>
           <p class='baritems'>Score: <br><span id="score">0</span></p>
-          <p class='baritems'>Lives: <br><span id="lives"></span></p>
+          <p class='baritems'>Lives: <br><span id="lives">&hearts; &hearts; &hearts;</span></p>
         </div>
-        <!-- &hearts; &hearts; &hearts; -->
-        <p>"Life... uh... finds a way." Ian Malcolm, 1995.</p>
-        <p>Instructions go here. Lorem ipsum dolor amet taiyaki truffaut williamsburg humblebrag, brunch aesthetic 90's brooklyn godard gastropub small batch chartreuse. Stumptown celiac craft beer biodiesel put a bird on it disrupt shoreditch palo santo church-key yuccie tattooed seitan taiyaki. Man braid williamsburg chia fingerstache venmo asymmetrical lo-fi. Vegan retro raclette actually wolf palo santo. Wayfarers plaid tilde twee adaptogen tousled marfa flannel shaman celiac activated charcoal roof party brooklyn literally. Biodiesel taiyaki copper mug, meditation brunch franzen kombucha cloud bread synth wayfarers whatever.</p>
-        <div class='startgame'>
-          <button class='startbutton'><img src="/images/Jurassic-Park-logo.jpg" alt="Jurassic Park logo" class="logo"></button>
-          <div class='starttext'><p>Click here to start the game!</p></div>
-        </div>  
+        <div class='boxtext'>
+          <p>"Life... uh... finds a way." Ian Malcolm, 1995.</p>
+          <div class='instructionbox'>
+            <h2>Instructions</h2>
+            <p>Navigate your way around the dangerous wilderness of Isla Nublar using the arrow keys.</p>
+            <p>Collect all the dinosaur eggs for John Hammond to escape the island!</p>
+            <p>Team up with Dr Sattler and you'll be invincible. </p>
+          </div>
+          <div class='startgame'>
+            <div class='starttext'>
+              <p>Click on shirtless Jeff Goldblum to start the game!</p>
+            </div>
+            <button class='startbutton'><img src="/images/shirtless-jeff-transparent.png" alt="Jurassic Park logo"
+                class="logo"></button>
+
+          </div>
+        </div>
       </div>
       <div class='grid'></div>
     </div>
 
 
-    <div class="dinosaur1 hat"> </div>
+    <div class="ready"> </div>
 
 
 
