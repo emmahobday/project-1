@@ -13,6 +13,7 @@
 // what else blocks dinosaurs - barriers, but also...? Holding area SORTED but should dinosaurs go back if the next cell contains a dinosaur?
 // dino 1 still tends to get stuck in corners, but maybe that's just his personality
 // make dinosaurs not walk on top of each other 
+
 // catching a flashing dino logic
 // game over logic
 // start game logic
@@ -63,6 +64,14 @@ function setupGame() {
   let dinoThreeDirection
   let dinoFourDirection
   let pauseDinoMovement = false
+  let resetFlashOne = false
+  let resetFlashTwo = false
+  let resetFlashThree = false
+  let resetFlashFour = false
+  let dinoOneCaught = false
+  let dinoTwoCaught = false
+  let dinoThreeCaught = false
+  let dinoFourCaught = false
   let gameEnding = false
 
   if (lives === 0) {
@@ -397,7 +406,7 @@ function setupGame() {
       dinoTwoMovement()
       dinoThreeMovement()
       dinoFourMovement()
-      gameEnding = false 
+      gameEnding = false
     }, 2000)
   }
 
@@ -485,22 +494,40 @@ function setupGame() {
     cells[dinosaurFourPosition].classList.remove('dinosaur4')
     cells[dinosaurFourPosition].classList.add('flashingDino4')
 
-    fleeingDinosaurs()
+    fleeingDinosaur1()
+    fleeingDinosaur2()
+    fleeingDinosaur3()
+    fleeingDinosaur4()
     catchFlashingDino()
 
-    // if (cells[jeffPosition].classList.contains('flashingDino')) {
-    //   cells[jeffPosition].classList.remove('flashingDino')
-    //   // STOP THE FLASHING DINO MOVEMENT LOGIC
-    //   score += 1000
-    //   setTimeout(() => {
-    //     cells[134].classList.add('dinosaur1')
-    //     dinosaurOnePosition = 134
-    //   }, 5000)
-    // }
+
+
+    if (cells[jeffPosition].classList.contains('flashingDino')) {
+      console.log('jeff caught a dinosaur!')
+      //   cells[jeffPosition].classList.remove('flashingDino')
+      //   // STOP THE FLASHING DINO MOVEMENT LOGIC
+      //   score += 1000
+      //   setTimeout(() => {
+      //     cells[134].classList.add('dinosaur1')
+      //     dinosaurOnePosition = 134
+      //   }, 5000)
+    }
 
 
     // WHAT HAPPENS AT THE END OF THE FLASHING SEQUENCE
     setTimeout(() => {
+      if (dinoOneCaught) {
+        dinosaurOnePosition = 134
+      }
+      if (dinoTwoCaught) {
+        dinosaurTwoPosition = 135
+      }
+      if (dinoThreeCaught) {
+        dinosaurThreePosition = 153
+      }
+      if (dinoFourCaught) {
+        dinosaurFourPosition = 152
+      }
       cells[dinosaurOnePosition].classList.remove('flashingDino')
       cells[dinosaurOnePosition].classList.add('dinosaur1')
       cells[dinosaurTwoPosition].classList.remove('flashingDino2')
@@ -568,29 +595,75 @@ function setupGame() {
   }
 
   function catchFlashingDino() {
+    console.log('catching1 in theory')
 
     // maybe try putting in the one millisecond timer thing that might help
     // but also what am I looking for? the intersection of 'jeff' and 'flashingdino'? or jeffposition, dinosauroneposition? THINK THIS THROUGH.
 
-    if (cells[jeffPosition].classList.contains('flashingDino')) {
-      cells[jeffPosition].classList.remove('flashingDino')
-      score += 1000
-      dinosaurOnePosition = 500
-      setTimeout(() => {
-        cells[134].classList.add('dinosaur1')
+    const intervalId = setInterval(() => {
+      if (cells[jeffPosition].classList.contains('flashingDino')) {
+        console.log('jeff caught a dinosaur!')
+        cells[jeffPosition].classList.remove('flashingDino')
+        score += 1000
+        resetFlashOne = true
         dinosaurOnePosition = 134
-      }, 3000)
-    }
+        dinoOneCaught = true
+      }
+      if (cells[jeffPosition].classList.contains('flashingDino2')) {
+        console.log('jeff caught a dinosaur2!')
+        cells[jeffPosition].classList.remove('flashingDino2')
+        score += 1000
+        resetFlashTwo = true
+        dinosaurTwoPosition = 135
+        dinoTwoCaught = true
+      }
+      if (cells[jeffPosition].classList.contains('flashingDino3')) {
+        console.log('jeff caught a dinosaur3!')
+        cells[jeffPosition].classList.remove('flashingDino3')
+        score += 1000
+        resetFlashThree = true
+        dinosaurThreePosition = 153
+        dinoThreeCaught = true
+      }
+      if (cells[jeffPosition].classList.contains('flashingDino4')) {
+        console.log('jeff caught a dinosaur4!')
+        cells[jeffPosition].classList.remove('flashingDino4')
+        score += 1000
+        resetFlashFour = true
+        dinosaurFourPosition = 152
+        dinoFourCaught = true
+      }
+    }, 1)
 
-    if (cells[dinosaurOnePosition].classList.contains('jeff') && cells[dinosaurOnePosition].classList.contains('flashingDino')) {
-      cells[dinosaurOnePosition].classList.remove('flashingDino')
-      score += 1000
-      dinosaurOnePosition = 500
-      setTimeout(() => {
-        cells[134].classList.add('dinosaur1')
-        dinosaurOnePosition = 134
-      }, 3000)
-    }
+
+
+    setTimeout(() => {
+      clearInterval(intervalId)
+    }, 5000)
+
+    // if (cells[jeffPosition].classList.contains('flashingDino')) {
+    //   console.log('caught from jeffpositioncell containing flashingdino')
+    //   // cells[jeffPosition].classList.remove('flashingDino')
+    //   // score += 1000
+    //   // resetFlashOne = true
+    //   // setTimeout(() => {
+    //   //   dinosaurOnePosition = 134
+    //   //   cells[dinosaurOnePosition].classList.add('dinosaur1')
+    //   //   resetFlashOne = false
+    //   // }, 3000)
+    // }
+
+    // if (cells[dinosaurOnePosition].classList.contains('jeff') && cells[dinosaurOnePosition].classList.contains('flashingDino')) {
+    //   console.log('caught from dinooneposition containing jeff AND dinooneposition containing flashingdino')
+    //   // cells[dinosaurOnePosition].classList.remove('flashingDino')
+    //   // score += 1000
+    //   // resetFlashOne = true
+    //   // setTimeout(() => {
+    //   //   dinosaurOnePosition = 134
+    //   //   cells[dinosaurOnePosition].classList.add('dinosaur1')
+    //   //   resetFlashOne = false
+    //   // }, 3000)
+    // }
 
 
     // if cell contains jeff and a flashing dinosaur...
@@ -600,10 +673,10 @@ function setupGame() {
     //
   }
 
-  function fleeingDinosaurs() {
-    const flashingIntervalId = setInterval(() => {
-      if (!pauseDinoMovement) {
-        clearInterval(flashingIntervalId)
+  function fleeingDinosaur1() {
+    const flashingOneIntervalId = setInterval(() => {
+      if (resetFlashOne || !pauseDinoMovement) {
+        clearInterval(flashingOneIntervalId)
         return
       } else {
         // DINOSAUR ONE
@@ -703,7 +776,17 @@ function setupGame() {
             flashMoveUp()
           }
         }
+      }
+    }, 500)
+  }
 
+
+  function fleeingDinosaur2() {
+    const flashingTwoIntervalId = setInterval(() => {
+      if (resetFlashTwo || !pauseDinoMovement) {
+        clearInterval(flashingTwoIntervalId)
+        return
+      } else {
         // DINOSAUR TWO
         // case: SAME ROW
         if ((Math.floor(dinosaurTwoPosition / width)) === (Math.floor(jeffPosition / width))) {
@@ -801,6 +884,16 @@ function setupGame() {
             flashTwoMoveUp()
           }
         }
+      }
+    }, 500)
+  }
+
+  function fleeingDinosaur3() {
+    const flashingThreeIntervalId = setInterval(() => {
+      if (resetFlashThree || !pauseDinoMovement) {
+        clearInterval(flashingThreeIntervalId)
+        return
+      } else {
         // DINOSAUR Three
         // case: SAME ROW
         if ((Math.floor(dinosaurThreePosition / width)) === (Math.floor(jeffPosition / width))) {
@@ -898,6 +991,16 @@ function setupGame() {
             flashThreeMoveUp()
           }
         }
+      }
+    }, 500)
+  }
+
+  function fleeingDinosaur4() {
+    const flashingFourIntervalId = setInterval(() => {
+      if (resetFlashFour || !pauseDinoMovement) {
+        clearInterval(flashingFourIntervalId)
+        return
+      } else {
         // DINOSAUR Four
         // case: SAME ROW
         if ((Math.floor(dinosaurFourPosition / width)) === (Math.floor(jeffPosition / width))) {
