@@ -26,7 +26,7 @@ margin: 20px auto;
 
 main {
   background-color: forestgreen;
-  background-image: url(/images/jurassic-world-background-elegant-jurassic-park-background-premier-live-casino-this-week-of-jurassic-world-background.jpg);
+  background-image: url(../images/jurassic-world-background-elegant-jurassic-park-background-premier-live-casino-this-week-of-jurassic-world-background.jpg);
   border: 2px solid black;
   width: 100%vw;
   height: 100%vh;
@@ -119,8 +119,7 @@ button {
 }
 
 .jeff {
- /* background-image: url(/images/jeff.jpeg); */
- background-image: url(/images/shirtless-jeff-transparent.png);
+ background-image: url(../images/shirtless-jeff-transparent.png);
  background-size: contain;
  transform: scale(1.3);
 }
@@ -135,57 +134,57 @@ button {
 }
 
 .food {
-  background-image: url(/images/golden-egg.png);
+  background-image: url(../images/golden-egg.png);
   background-size: contain;
 }
 
 .special {
-  background-image: url(/images/laura-dern-transparent.png);
+  background-image: url(../images/laura-dern-transparent.png);
   background-size: contain;
 }
 
 .dinosaur1 {
-  background-image: url(/images/dinosaurs/raptor-green.png);
+  background-image: url(../images/dinosaurs/raptor-green.png);
   background-size: contain;
   background-color: rgba(0, 0, 0, 0.8);
 }
 
 .dinosaur2 {
-  background-image: url(/images/dinosaurs/purple-transparent.png);
+  background-image: url(../images/dinosaurs/purple-transparent.png);
   background-size: contain;
   background-color: rgba(0, 0, 0, 0.8);
 }
 
 .dinosaur3 {
-  background-image: url(/images/dinosaurs/spino-red.png);
+  background-image: url(../images/dinosaurs/spino-red.png);
   background-size: contain;
   background-color: rgba(0, 0, 0, 0.8);
 }
 
 .dinosaur4 {
-  background-image: url(/images/dinosaurs/trex-orange.png);
+  background-image: url(../images/dinosaurs/trex-orange.png);
   background-size: contain;
   background-color: rgba(0, 0, 0, 0.8);
 }
 
 .flashingDino {
-  background-image: url(/images/dinosaurs/dinogif.gif);
+  background-image: url(../images/dinosaurs/dinogif.gif);
   background-size: contain;
   background-color: black;
 }
 
 .flashingDino2 {
-  background-image: url(/images/dinosaurs/dinogif.gif);
+  background-image: url(../images/dinosaurs/dinogif.gif);
   background-size: contain;
   background-color: black;
 }
 .flashingDino3 {
-  background-image: url(/images/dinosaurs/dinogif.gif);
+  background-image: url(../images/dinosaurs/dinogif.gif);
   background-size: contain;
   background-color: black;
 }
 .flashingDino4 {
-  background-image: url(/images/dinosaurs/dinogif.gif);
+  background-image: url(../images/dinosaurs/dinogif.gif);
   background-size: contain;
   background-color: black;
 }
@@ -211,7 +210,7 @@ button {
 }
 
 .red {
-  background-image: url(/images/dinosaurs/spino-red.png);
+  background-image: url(../images/dinosaurs/spino-red.png);
   background-size: contain;
   background-color: rgba(255, 4, 4, 0.5);
 }

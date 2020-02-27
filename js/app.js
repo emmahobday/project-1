@@ -576,47 +576,49 @@ function setupGame() {
 
     // WHAT HAPPENS AT THE END OF THE FLASHING SEQUENCE
     setTimeout(() => {
-      if (dinoOneCaught) {
-        dinosaurOnePosition = 134
-      }
-      if (dinoTwoCaught) {
-        dinosaurTwoPosition = 135
-      }
-      if (dinoThreeCaught) {
-        dinosaurThreePosition = 153
-      }
-      if (dinoFourCaught) {
-        dinosaurFourPosition = 152
-      }
+      if (!youWon) {
+        if (dinoOneCaught) {
+          dinosaurOnePosition = 134
+        }
+        if (dinoTwoCaught) {
+          dinosaurTwoPosition = 135
+        }
+        if (dinoThreeCaught) {
+          dinosaurThreePosition = 153
+        }
+        if (dinoFourCaught) {
+          dinosaurFourPosition = 152
+        }
 
-      cells.forEach((cell) => {
-        if (cell.classList.contains('flashingDino')) {
-          cell.classList.remove('flashingDino')
-        }
-        if (cell.classList.contains('flashingDino2')) {
-          cell.classList.remove('flashingDino2')
-        }
-        if (cell.classList.contains('flashingDino3')) {
-          cell.classList.remove('flashingDino3')
-        }
-        if (cell.classList.contains('flashingDino4')) {
-          cell.classList.remove('flashingDino4')
-        }
-      })
+        cells.forEach((cell) => {
+          if (cell.classList.contains('flashingDino')) {
+            cell.classList.remove('flashingDino')
+          }
+          if (cell.classList.contains('flashingDino2')) {
+            cell.classList.remove('flashingDino2')
+          }
+          if (cell.classList.contains('flashingDino3')) {
+            cell.classList.remove('flashingDino3')
+          }
+          if (cell.classList.contains('flashingDino4')) {
+            cell.classList.remove('flashingDino4')
+          }
+        })
 
-      cells[dinosaurOnePosition].classList.remove('flashingDino')
-      cells[dinosaurOnePosition].classList.add('dinosaur1')
-      cells[dinosaurTwoPosition].classList.remove('flashingDino2')
-      cells[dinosaurTwoPosition].classList.add('dinosaur2')
-      cells[dinosaurThreePosition].classList.remove('flashingDino3')
-      cells[dinosaurThreePosition].classList.add('dinosaur3')
-      cells[dinosaurFourPosition].classList.remove('flashingDino4')
-      cells[dinosaurFourPosition].classList.add('dinosaur4')
-      pauseDinoMovement = false
-      dinosaurMovement()
-      dinoTwoMovement()
-      dinoThreeMovement()
-      dinoFourMovement()
+        cells[dinosaurOnePosition].classList.remove('flashingDino')
+        cells[dinosaurOnePosition].classList.add('dinosaur1')
+        cells[dinosaurTwoPosition].classList.remove('flashingDino2')
+        cells[dinosaurTwoPosition].classList.add('dinosaur2')
+        cells[dinosaurThreePosition].classList.remove('flashingDino3')
+        cells[dinosaurThreePosition].classList.add('dinosaur3')
+        cells[dinosaurFourPosition].classList.remove('flashingDino4')
+        cells[dinosaurFourPosition].classList.add('dinosaur4')
+        pauseDinoMovement = false
+        dinosaurMovement()
+        dinoTwoMovement()
+        dinoThreeMovement()
+        dinoFourMovement()
+      }
     }, 4000)
 
     if (!pauseDinoMovement) {
