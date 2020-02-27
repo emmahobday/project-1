@@ -88,16 +88,6 @@ button {
   background-color: black;
 }
 
-.button:hover {
-  background-color: yellow;
-}
-
-.button:active {
-  background-color: #3e8e41;
-  box-shadow: 0 15px #666;
-  transform: translateY(4px);
-}
-
 
 .grid {
   /* flex-grow: 3; */
@@ -237,6 +227,7 @@ font-size: 18px;
 
 .win {
   font-size: 46px;
+  margin: 20px;
 }
 
 #ready {
@@ -246,6 +237,7 @@ font-size: 18px;
   height: 200px;
   width: 400px;
   font-family: 'Special Elite', cursive;
+  text-align: center;
   font-size: 56px;
   color: gainsboro;
   margin: auto;
@@ -256,4 +248,31 @@ font-size: 18px;
   transition: s ease;
   transform: translate(280px,-450px);
   padding: 30px;
+}
+
+.playagain {
+  font-size: 36px;
+  font-family: 'Special Elite', cursive;
+  background-color: white;
+  opacity: 70%;
+  border: gray;
+  color: black;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 6px #999;
+  /* margin: 10px; */
+}
+
+.winelement {
+  margin: 10px auto;
+}
+
+.playagain:hover {
+  background-color: gray;
+}
+
+.playagain:active {
+  background-color: gray;
+  box-shadow: 0 3px gainsboro;
+  transform: translateY(2px);
 }

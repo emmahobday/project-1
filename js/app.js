@@ -2,7 +2,6 @@ function loadGame() {
   const startButton = document.querySelector('.startbutton')
   const audio = document.querySelector('#audio')
   const ready = document.querySelector('#ready')
-  const go = document.querySelector('#go')
   startButton.addEventListener('click', () => {
     audio.src = 'sounds/jurassicpark.mp3'
     audio.play()
@@ -22,8 +21,7 @@ function loadGame() {
 
 // what else blocks dinosaurs - barriers, but also...? Holding area SORTED but // make dinosaurs not walk on top of each other  - should dinosaurs go back if the next cell contains a dinosaur? OR pause for one step?
 // dino 1 still tends to get stuck in corners, but maybe that's just his personality
-
-// game over logic - yes, just need to add the animation and scoreboard
+// could add a play again button
 // scoreboard logic
 // refactoring this gigantic mess. MAYBE just have one (best) logic for all dinosaurs.... but how? BUT will that leave them all stuck in similar loops..?
 
@@ -36,14 +34,16 @@ function loadGame() {
 // getting caught can be a little glitchy - try the forEach every millisecond maybe! DONE
 // the magic tunnel - logic for dinos 2-4 I think
 // start game logic - get the button working
+// game over logic - 
+// music!
+// startbutton leads to countdown before game starts?
 
 // IDEAS TO MAKE IT EXTRA NICE
 // could make flashing dinosaurs flash white for last few seconds...
 // eating multiple flashing dinos in succession could increase points
 // if your score hits a certain amount, some green jelly could appear for an extra life?
 // flashing dinos don't know about the tunnel
-// music!
-// startbutton leads to countdown before game starts?
+
 
 // ideas - an array to monitor being stuck in corners. if direction is changed twice back and forth, keep going until you can turn on the cross axis?
 // another idea - calculate angle to determine priority of movement decision.
@@ -79,7 +79,8 @@ function setupGame() {
   let lives = 3
   // const livesHearts = '&hearts; '.repeat(parseInt(lives))
   // console.log(livesHearts)
-  livesDisplay.innerHTML = `${'&hearts; '.repeat(lives)}`
+
+
 
   let randomSelector = 0
   let dinoTwoDirection
@@ -426,11 +427,15 @@ function setupGame() {
     resetFlashThree = true
     resetFlashFour = true
     setTimeout(() => {
-      ready.innerHTML = `<p class='winbox win'>You won!</p> <p class='winbox'>Score:</p> <p class='winbox'>${score}</p> <p class='winbox'>${lives} remaining lives x 1000:</p> <p class='winbox'>${lives * 1000}</p> <p class='winbox'>Final score:</p> <p class='winbox win'>${score + (lives * 1000)}</p>`
-      ready.style.height = '400px'
+      ready.innerHTML = `<p class='winbox win'>You won!</p> <div class="winelement"><p class='winbox'>Score:</p> <p class='winbox'>${score}</p></div><div class="winelement"><p class='winbox'>${lives} remaining lives x 1000:</p> <p class='winbox'>${lives * 1000}</p></div><p class='winbox'>Final score:</p> <p class='winbox win'>${score + (lives * 1000)}</p><br> <button class="playagain">Play again?</button>`
+      const playAgain = document.querySelector('.playagain')
+      playAgain.addEventListener('click', () => {
+        window.location.reload(true)
+      })
+      ready.style.height = '500px'
       // ready.style.background = 
       ready.style.width = '500px'
-
+      ready.style.transform = 'translate(270px,-560px)'
       ready.style.visibility = 'visible'
       // alert(`You won! You scored ${score} and have ${lives} remaining lives for a grand total of ${score + (lives * 1000)}!`)
     }, 100)
@@ -443,7 +448,11 @@ function setupGame() {
     resetFlashThree = true
     resetFlashFour = true
     ready.style.visibility = 'visible'
-    ready.innerHTML = 'Game over!'
+    ready.innerHTML = 'Game over! <br> <button class="playagain">Play again?</button>'
+    const playAgain = document.querySelector('.playagain')
+    playAgain.addEventListener('click', () => {
+      window.location.reload(true)
+    })
   }
 
   function caughtByDinosaur() {
