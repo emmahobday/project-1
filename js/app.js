@@ -1,10 +1,20 @@
 function loadGame() {
   const startButton = document.querySelector('.startbutton')
   const audio = document.querySelector('#audio')
+  const ready = document.querySelector('#ready')
+  const go = document.querySelector('#go')
   startButton.addEventListener('click', () => {
     audio.src = 'sounds/jurassicpark.mp3'
     audio.play()
-    setupGame()
+    ready.style.visibility = 'visible'
+    setTimeout(() => {
+      ready.innerHTML = 'Go!'
+    }, 1000)
+    setTimeout(() => {
+      ready.style.visibility = 'hidden'
+      setupGame()
+    }, 2000)
+
   })
 }
 
@@ -61,6 +71,9 @@ function setupGame() {
   const holdingArea = [134, 135, 152, 153]
   const scoreDisplay = document.querySelector('#score')
   const livesDisplay = document.querySelector('#lives')
+  // const winAlert = document.querySelector('#winalert')
+  // const loseAlert = document.querySelector('#losealert')
+  const ready = document.querySelector('#ready')
   //livesDisplay is a span which contains just the hearts
   let score = 0
   let lives = 3
@@ -411,10 +424,26 @@ function setupGame() {
     resetFlashOne = true
     resetFlashTwo = true
     resetFlashThree = true
-    resetFlashFour = true 
+    resetFlashFour = true
     setTimeout(() => {
-      alert(`You won! You scored ${score} and have ${lives} remaining lives for a grand total of ${score + (lives * 1000)}!`)
-    }, 600)
+      ready.innerHTML = `<p class='winbox win'>You won!</p> <p class='winbox'>Score:</p> <p class='winbox'>${score}</p> <p class='winbox'>${lives} remaining lives x 1000:</p> <p class='winbox'>${lives * 1000}</p> <p class='winbox'>Final score:</p> <p class='winbox win'>${score + (lives * 1000)}</p>`
+      ready.style.height = '400px'
+      // ready.style.background = 
+      ready.style.width = '500px'
+
+      ready.style.visibility = 'visible'
+      // alert(`You won! You scored ${score} and have ${lives} remaining lives for a grand total of ${score + (lives * 1000)}!`)
+    }, 100)
+  }
+
+  function youLose() {
+    pauseDinoMovement = true
+    resetFlashOne = true
+    resetFlashTwo = true
+    resetFlashThree = true
+    resetFlashFour = true
+    ready.style.visibility = 'visible'
+    ready.innerHTML = 'Game over!'
   }
 
   function caughtByDinosaur() {
@@ -433,26 +462,28 @@ function setupGame() {
     lives -= 1
     livesDisplay.innerHTML = `${'&hearts; '.repeat(lives)}`
     if (lives === 0) {
-      confirm('Game over! Play again?')
+      youLose()
     }
-    setTimeout(() => {
-      jeffPosition = 242
-      dinosaurOnePosition = 134
-      dinosaurThreePosition = 153
-      dinosaurTwoPosition = 135
-      dinosaurFourPosition = 152
-      cells[dinosaurOnePosition].classList.add('dinosaur1')
-      cells[dinosaurTwoPosition].classList.add('dinosaur2')
-      cells[dinosaurThreePosition].classList.add('dinosaur3')
-      cells[dinosaurFourPosition].classList.add('dinosaur4')
-      cells[jeffPosition].classList.add('jeff')
-      pauseDinoMovement = false
-      dinosaurMovement()
-      dinoTwoMovement()
-      dinoThreeMovement()
-      dinoFourMovement()
-      gameEnding = false
-    }, 2000)
+    if (lives > 0) {
+      setTimeout(() => {
+        jeffPosition = 242
+        dinosaurOnePosition = 134
+        dinosaurThreePosition = 153
+        dinosaurTwoPosition = 135
+        dinosaurFourPosition = 152
+        cells[dinosaurOnePosition].classList.add('dinosaur1')
+        cells[dinosaurTwoPosition].classList.add('dinosaur2')
+        cells[dinosaurThreePosition].classList.add('dinosaur3')
+        cells[dinosaurFourPosition].classList.add('dinosaur4')
+        cells[jeffPosition].classList.add('jeff')
+        pauseDinoMovement = false
+        dinosaurMovement()
+        dinoTwoMovement()
+        dinoThreeMovement()
+        dinoFourMovement()
+        gameEnding = false
+      }, 2000)
+    }
   }
 
   //let's get these dinosaurs moving
