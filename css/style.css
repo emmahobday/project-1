@@ -251,7 +251,7 @@ font-size: 18px;
 }
 
 .playagain {
-  font-size: 36px;
+  font-size: 28px;
   font-family: 'Special Elite', cursive;
   background-color: white;
   opacity: 70%;
@@ -259,7 +259,7 @@ font-size: 18px;
   color: black;
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 6px #999;
+  box-shadow: 0 9px #999;
   /* margin: 10px; */
 }
 
@@ -274,5 +274,5 @@ font-size: 18px;
 .playagain:active {
   background-color: gray;
   box-shadow: 0 3px gainsboro;
-  transform: translateY(2px);
+  transform: translateY(4px);
 }

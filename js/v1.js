@@ -13,8 +13,42 @@ function loadGame() {
       ready.style.visibility = 'hidden'
       setupGame()
     }, 2000)
+
   })
 }
+
+//list of tasty bugs
+
+// what else blocks dinosaurs - barriers, but also...? Holding area SORTED but // make dinosaurs not walk on top of each other  - should dinosaurs go back if the next cell contains a dinosaur? OR pause for one step?
+// dino 1 still tends to get stuck in corners, but maybe that's just his personality
+// could add a play again button
+// scoreboard logic
+// refactoring this gigantic mess. MAYBE just have one (best) logic for all dinosaurs.... but how? BUT will that leave them all stuck in similar loops..?
+
+// MAYBE SOLVED
+// dino3 sometimes stops and I DONT KNOW WHY HE IS STUPID AND SO IS CODING - try adding fourth, return option, and DOUBLE CHECK CODE - issue seems to be when he goes right
+// livesDisplay isn't updating with hearts - works with numbers, hearts update if I update line 23, but not sure yet why it isn't updating when the code runs
+// catching a flashing dino logic 
+// lives alert doesnt work
+// getting caught is so frigging glitchy
+// getting caught can be a little glitchy - try the forEach every millisecond maybe! DONE
+// the magic tunnel - logic for dinos 2-4 I think
+// start game logic - get the button working
+// game over logic - 
+// music!
+// startbutton leads to countdown before game starts?
+
+// IDEAS TO MAKE IT EXTRA NICE
+// could make flashing dinosaurs flash white for last few seconds...
+// eating multiple flashing dinos in succession could increase points
+// if your score hits a certain amount, some green jelly could appear for an extra life?
+// flashing dinos don't know about the tunnel
+
+
+// ideas - an array to monitor being stuck in corners. if direction is changed twice back and forth, keep going until you can turn on the cross axis?
+// another idea - calculate angle to determine priority of movement decision.
+// another idea - put dinosaurs into an array (somehow lol), and do the logic forEach rather than writing it all out. 
+
 
 function setupGame() {
 
@@ -31,13 +65,23 @@ function setupGame() {
   let dinosaurTwoPosition = 135
   let dinosaurThreePosition = 153
   let dinosaurFourPosition = 152
+  const dinoPositionsArray = [dinosaurOnePosition, dinosaurTwoPosition, dinosaurThreePosition, dinosaurFourPosition]
   const barriersArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 26, 27, 35, 36, 38, 39, 40, 41, 42, 44, 45, 47, 48, 49, 50, 51, 53, 54, 56, 57, 58, 59, 60, 62, 63, 65, 66, 67, 68, 69, 71, 72, 89, 90, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 107, 108, 114, 119, 125, 126, 127, 128, 129, 130, 132, 134, 135, 137, 139, 140, 141, 142, 143, 152, 153, 162, 163, 164, 165, 166, 168, 173, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 186, 187, 188, 189, 190, 191, 193, 194, 195, 196, 197, 198, 206, 207, 215, 216, 218, 219, 220, 222, 224, 225, 227, 229, 230, 231, 233, 234, 236, 237, 238, 240, 245, 247, 248, 249, 251, 252, 258, 259, 260, 261, 262, 263, 269, 270, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 287, 288, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323]
   const specialArray = [34, 115, 199, 214]
+  const holdingArea = [134, 135, 152, 153]
   const scoreDisplay = document.querySelector('#score')
   const livesDisplay = document.querySelector('#lives')
+  // const winAlert = document.querySelector('#winalert')
+  // const loseAlert = document.querySelector('#losealert')
   const ready = document.querySelector('#ready')
+  //livesDisplay is a span which contains just the hearts
   let score = 0
   let lives = 3
+  // const livesHearts = '&hearts; '.repeat(parseInt(lives))
+  // console.log(livesHearts)
+
+
+
   let randomSelector = 0
   let dinoTwoDirection
   let dinoThreeDirection
@@ -55,6 +99,22 @@ function setupGame() {
   let youWon = false
 
   let eggsRemaining = 133
+  console.log(eggsRemaining)
+
+  // const eggsRemainingArray = cells.filter((cell) => {
+  //   return cell.classList.contains('food')
+  // })
+
+  // let eggsRemaining = eggsRemainingArray.length
+
+
+  // cells.forEach((cell) => {
+  //   if (cell.classList.contains('food')) {
+  //     eggsRemaining += 1
+  //   }
+  // })
+
+
 
   function dinoMoveUp() {
     cells[dinosaurOnePosition].classList.remove('dinosaur1')
@@ -237,6 +297,7 @@ function setupGame() {
 
   // Setting up the board
 
+
   for (let i = 0; i < gridCellCount; i++) {
     const cell = document.createElement('div')
     cell.classList.add('cell')
@@ -321,6 +382,10 @@ function setupGame() {
       score += 100
       eggsRemaining -= 1
       eggCollectSound.play()
+      console.log(eggsRemaining)
+      // if (eggsRemaining === 0) {
+      //   youWin()
+      // }
       scoreDisplay.innerHTML = `${score}`
     }
     // logic for hitting the special dr sattler!
@@ -345,7 +410,24 @@ function setupGame() {
       }
     }, 1)
 
+
+    // const intervalId = setInterval(() => {
+    //   if (cells[jeffPosition].classList.contains('dinosaur1') || cells[jeffPosition].classList.contains('dinosaur2') || cells[jeffPosition].classList.contains('dinosaur3') || cells[jeffPosition].classList.contains('dinosaur4')) {
+    //     caughtByDinosaur()
+    //   }
+    //   if (cells[jeffPosition].classList.contains('dinosaur2')) {
+    //     caughtByDinosaur()
+    //   }
+    //   if (cells[jeffPosition].classList.contains('dinosaur3')) {
+    //     caughtByDinosaur()
+    //   }
+    //   if (cells[jeffPosition].classList.contains('dinosaur4')) {
+    //     caughtByDinosaur()
+    //   }
+    // }, 1)
+
     if (eggsRemaining === 0) {
+      console.log(eggsRemaining)
       youWin()
     }
 
@@ -353,6 +435,7 @@ function setupGame() {
   })
 
   function youWin() {
+    console.log('you won!')
     youWon = true
     gameEnding = true
     pauseDinoMovement = true
@@ -367,9 +450,11 @@ function setupGame() {
         window.location.reload(true)
       })
       ready.style.height = '500px'
+      // ready.style.background = 
       ready.style.width = '500px'
       ready.style.transform = 'translate(270px,-560px)'
       ready.style.visibility = 'visible'
+      // alert(`You won! You scored ${score} and have ${lives} remaining lives for a grand total of ${score + (lives * 1000)}!`)
     }, 100)
   }
 
@@ -479,6 +564,16 @@ function setupGame() {
   }, 400)
 
   function runSpecial() {
+    // and here we make the dinosaurs flash and retreat DONE
+    // we need to include the change in class (and thus icon) DONE
+    // also need each dinosaur separately DONE
+    // also need escape logic (consider simplest way to do this) DONE
+    // it should last for... 7 seconds? DONE
+    // include the points scored
+    // include the caught dinosaur disappearing and reappearing after a timeout in the holding area
+    // AHA it is carrying on because we need to pause the moveDino() etc functions in a timeout for as long as the flashing timeout lasts!!
+    // AHHH but they are defined within a function... think about how to access them.
+
     if (gameEnding || youWon) {
       return
     }
@@ -555,11 +650,63 @@ function setupGame() {
     if (!pauseDinoMovement) {
       return
     }
+
+    // cells.forEach((cell) => {
+    //   if (cell.classList.contains('dinosaur1')) {
+    //     cell.classList.remove('dinosaur1')
+    //   }
+    // })
+
+
+    // setTimeout(() => {
+    //   // if it's flashing replace with normal
+    // })
+
+
+    // cells.forEach((cell) => {
+    //   if (cell.classList.contains('dinosaur1')) {
+    //     cell.classList.remove('dinosaur1')
+    //   }
+
+
+    // cells.forEach((cell) => {
+    //   if (cell.classList.contains('dinosaur1')) {
+    //     cell.classList.remove('dinosaur1')
+    //     cell.classList.add('flashingDino')
+    //     setTimeout(() => {
+    //       console.log('flashing dinosaur1 lol')
+    //       cells.forEach((cell) => {
+    //         if (cell.classList.contains('flashingDino')) {
+    //           cell.classList.remove('flashingDino')
+    //           cell.classList.add('dinosaur1')
+    //           let pauseDinoMovement = false
+    //         }
+    //       })
+    //     }, 5000)
+    //   }
+
+    //logic for what happens if you catch a dinosaur when it's flashing!
+    // THIS NEEDS UPDATING ONCE THEY MOVE x4
+    // if (cells[jeffPosition].classList.contains('flashingDino')) {
+    //   cells[jeffPosition].classList.remove('flashingDino')
+    //   lives += 1
+    //   livesDisplay.innerHTML = `${livesHearts}`
+    //   setTimeout(() => {
+    //     //update this line below - where caught dino reappears (this is test cell)
+    //     cells[304].classList.add('dinosaur')
+    //   }, 3000)
+    // }
+
   }
 
   function catchFlashingDino() {
+    console.log('catching1 in theory')
+    // maybe try putting in the one millisecond timer thing that might help
+    // but also what am I looking for? the intersection of 'jeff' and 'flashingdino'? or jeffposition, dinosauroneposition? THINK THIS THROUGH.
+
     const intervalId = setInterval(() => {
       if (cells[jeffPosition].classList.contains('flashingDino')) {
+        console.log('jeff caught a dinosaur!')
         caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino')
         score += 1000
@@ -568,6 +715,7 @@ function setupGame() {
         dinoOneCaught = true
       }
       if (cells[jeffPosition].classList.contains('flashingDino2')) {
+        console.log('jeff caught a dinosaur2!')
         caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino2')
         score += 1000
@@ -576,6 +724,7 @@ function setupGame() {
         dinoTwoCaught = true
       }
       if (cells[jeffPosition].classList.contains('flashingDino3')) {
+        console.log('jeff caught a dinosaur3!')
         caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino3')
         score += 1000
@@ -584,6 +733,7 @@ function setupGame() {
         dinoThreeCaught = true
       }
       if (cells[jeffPosition].classList.contains('flashingDino4')) {
+        console.log('jeff caught a dinosaur4!')
         caughtdino.play()
         cells[jeffPosition].classList.remove('flashingDino4')
         score += 1000
@@ -596,6 +746,37 @@ function setupGame() {
     setTimeout(() => {
       clearInterval(intervalId)
     }, 5000)
+
+    // if (cells[jeffPosition].classList.contains('flashingDino')) {
+    //   console.log('caught from jeffpositioncell containing flashingdino')
+    //   // cells[jeffPosition].classList.remove('flashingDino')
+    //   // score += 1000
+    //   // resetFlashOne = true
+    //   // setTimeout(() => {
+    //   //   dinosaurOnePosition = 134
+    //   //   cells[dinosaurOnePosition].classList.add('dinosaur1')
+    //   //   resetFlashOne = false
+    //   // }, 3000)
+    // }
+
+    // if (cells[dinosaurOnePosition].classList.contains('jeff') && cells[dinosaurOnePosition].classList.contains('flashingDino')) {
+    //   console.log('caught from dinooneposition containing jeff AND dinooneposition containing flashingdino')
+    //   // cells[dinosaurOnePosition].classList.remove('flashingDino')
+    //   // score += 1000
+    //   // resetFlashOne = true
+    //   // setTimeout(() => {
+    //   //   dinosaurOnePosition = 134
+    //   //   cells[dinosaurOnePosition].classList.add('dinosaur1')
+    //   //   resetFlashOne = false
+    //   // }, 3000)
+    // }
+
+
+    // if cell contains jeff and a flashing dinosaur...
+    // remove flashing dinosaur
+    // add 1000 points
+    // set a timeout, and have it reappear as a normal dinosaur in the holding area (one at a time, so correct position), then restart movementlogic
+    //
   }
 
   function fleeingDinosaur1() {
@@ -1271,12 +1452,22 @@ function setupGame() {
   // this marks the end of dinosaurMovement()
 
   function dinoTwoMovement() {
+    // IDEAS
+    // sense availability in all four directions, and... proceed?
+    // set the variable for currentdirection and disallow turning back
+    // start general - move either right or left
+    // make long journeys - choose a direction and continue until you can't go any further
+    // create nodes - if jeff hits a spot, have specific routes planned from areas (ie if dinotwoposition === 132 || etcetcetc), head this way until dinotwoposition===whatever, then head xdirection.
+    // the tricky part is combining these specific steps within a more general time loop.
+    // create array of location history - push location value each time.
+    // create variable dinotwodirection and log to it the name of the function just called (updownleftright). then if that variable is called 'up', options are 'up, left, right' (check dirctions and randoselect/lookat jeff)
     const dinoTwoIntervalId = setInterval(() => {
       if (pauseDinoMovement) {
         clearInterval(dinoTwoIntervalId)
         return
       } else {
         let randomTwo
+        // console.log(dinoTwoDirection)
         if (dinoTwoDirection === 'up') {
 
           // if up, right and left are all free...
@@ -1457,6 +1648,7 @@ function setupGame() {
         return
       } else {
         let randomThree
+        // console.log(dinoThreeDirection)
         if (dinoThreeDirection === 'up') {
           //options are up--left-right
 
@@ -1608,6 +1800,7 @@ function setupGame() {
           }
         } else if (dinoThreeDirection === 'down') {
           // options are DOWN, RIGHT, and LEFT
+          console.log(dinoThreeDirection)
           if (Math.floor(dinosaurThreePosition / width) === Math.floor(jeffPosition / width)) {
             if (jeffPosition < dinosaurThreePosition) {
               if (!cells[dinosaurThreePosition - 1].classList.contains('barrier')) {
@@ -2033,6 +2226,7 @@ function setupGame() {
         return
       } else {
         let randomFour
+        // console.log(dinoFourDirection)
         if (dinoFourDirection === 'up') {
 
           // if up, right and left are all free...
