@@ -11,6 +11,34 @@ I chose to re-create the classic game Pac-Man with a Jurassic Park twist. Both a
 
 You can launch the game on GitHub pages [here](https://emmahobday.github.io/project-1/), or find the GitHub repo [here](https://github.com/emmahobday/project-1).
 
+## Table of contents
+
+* [Brief](#brief) 
+* [Technologies used](#tech) 
+* [Approach](#approach) 
+	* [Board Layout](#board)
+	* [Navigating the board](#nav)
+		* [Jeff Goldblum's movement](#jeff)
+		* [Collecting eggs](#eggs)
+		* [Assistance from Dr Sattler](#jeff)
+		* [Lives](#lives)
+	* [Dinosaur movement](#dinomove)
+		* [Dinosaur One](#dino1move)
+		* [Dinosaur Two](#dino2move)
+		* [Dinosaur Three](#dino3move)
+		* [Dinosaur Four](#dino3move)
+		* [Initial steps](#initial)
+		* [Fleeing dinosaurs](#flee)
+	* [Winning the game](#win)
+	* [Losing the game](#lose)
+	* [Sounds](#sounds)
+	* [Other](#other)
+	* [Styling](#styling)
+*  [Successes](#successes)
+*  [Lessons learned](#learning)
+*  [Ideas for future development](#future)
+
+<a name="brief"></a>
 ## Brief
 
 * Render a game in the browser
@@ -21,6 +49,7 @@ You can launch the game on GitHub pages [here](https://emmahobday.github.io/proj
 * Deploy your game online, where the rest of the world can access it
 * Use semantic markup for HTML and CSS (adhere to best practices)
 
+<a name="tech"></a>
 ## Technologies used
 * HTML5
 * CSS3
@@ -28,9 +57,10 @@ You can launch the game on GitHub pages [here](https://emmahobday.github.io/proj
 * Git and GitHub
 * Google Fonts
 
-
+<a name="approach"></a>
 ## Approach
 
+<a name="board"></a>
 ### Board layout
 
 The game is built using an 18 x 18 square grid, created using Javascript. HTML divs are created using a 'for loop' and appended as children of the grid. 
@@ -90,9 +120,10 @@ The class 'food' is added to all remaining cells, which signifies the cells whic
 
 ![Board Layout](images/screenshots/BoardLayout.png)
   
-
+<a name="nav"></a>
 ## Navigating the board
 
+<a name="jeff"></a>
 ### Jeff's movement
 Jeff is moved around the board using the arrow keys. I added an event listener to the page which listens for a keydown event, and then does the following:
 
@@ -143,6 +174,7 @@ Next, I added the board conditions whereby Jeff cannot be moved. In the above ex
 
 Each arrow key has similar conditions.
 
+<a name="eggs"></a>
 ### Collecting eggs
 
 If the cell that Jeff moves into contains an egg, this needs to be 'collected' - that is to say, the classname 'food' should be removed from the cell (making it disappear), and Jeff's score should increase by 100. Within the 'keydown' event listener, I added this 'if' statement after the code to reassign the jeffPosition variable:
@@ -157,6 +189,7 @@ if (cells[jeffPosition].classList.contains('food')) {
     }
 ```
 
+<a name="sattler"></a>
 ### Assistance from Dr. Sattler
 
 If Jeff moves into a cell that contains a miniature Dr. Ellie Sattler icon, this triggers the 'Special' sequence, whereby the dinosaurs flee, start flashing, and can be collected for bonus points. 
@@ -213,7 +246,7 @@ It's worth noting that removing these classes from the cells does not change the
         dinoThreeMovement()
         dinoFourMovement()
 ```
-
+<a name="lives"></a>
 ### Lives
 
 A player's lives starts at 3, and this is tracked using the variable `lives`.
@@ -266,9 +299,11 @@ It then checks how many lives are remaining:
 * 0 lives remaining: then the function `youLose()` is called
 * More than 0 lives remaining:  after two seconds (to allow the user time to recognise what's happened) all characters are returned to their starting points, and all movement is un-paused and restarted.
 
+<a name="dinomove"></a>
 ### Dinosaur movement
 The most complex challenge of this project was creating a successful algorithm for the dinosaurs' movement. They needed to roam around the board intelligently, moving towards Jeff Goldblum - an ever-moving target - while respecting the rules of the board. In addition to intelligent movement, I wanted a random element at times to make the dinosaurs less predictable.
 
+<a name="dino1move"></a>
 **Dinosaur One Movement**
 
 I initially programmed the first dinosaur - a green Tyrannosaurus Rex - using code that followed the structure of a large flow chart I had drawn up. 
@@ -309,6 +344,7 @@ This initial strategy was effective because it prioritised movements towards Jef
 
 However, upon testing the dinosaur's behaviour during gameplay, I noticed that she tended to get stuck in corners on the board, since she was unable to navigate out while Jeff remained in an inaccessible direction. Therefore, I decided to try a different strategy for the next dinosaur.
 
+<a name="dino2move"></a>
 **Dinosaur Two Movement**
 
 Dinosaur Two - a purple dilophosaurus - uses a different strategy to select her direction of movement.
@@ -373,6 +409,7 @@ if (randomTwo === 0) {
 
 Dinosaur Two's movements make her a more formidable nemesis than Dinosaur One since she can always find an exit path from any point. However, not being able to turn back on herself means Jeff can follow behind her without her attacking, and the new method of decision-making remained long-winded.
 
+<a name="dino3move"></a>
 **Dinosaur Three Movement**
 
 Dinosaur Three - a red spinosaurus - builds on the successes of Dinosaur Two's movement. I used another variable to track Dinosaur Three's movement, but changed my approach to decision making once again to try and make it more efficient. 
@@ -383,11 +420,12 @@ Dinosaur Three - a red spinosaurus - builds on the successes of Dinosaur Two's m
 
 * The logic used is otherwise similar to that of Dinosaur Two.
 
+<a name="dino4move"></a>
 **Dinosaur Four Movement**
 
 Dinosaur Four - an orange T-Rex - uses the same logic as Dinosaur Two, as her code seemed the most effective thus far. 
 
-
+<a name="initial"></a>
 **Initial steps**
 
 Upon testing my code, I found that the code worked well once the dinosaurs were moving around the board, but getting them out of their holding area was problematic as they tended to get stuck inside and took too long to get out. Therefore, I decided to hard-code in their initial steps to allow them to get out quickly. This means that their movement for the first few seconds of the game is very predictable, so I attempted to keep the number of a steps hard-coded to the minimum required. I used a counter to track the number of steps taken and a setInterval with a switch statement for each case.
@@ -417,7 +455,7 @@ let counter = 0
     }
   }, 400)
 ```
-
+<a name="flee"></a>
 ### Fleeing dinosaurs
 
 Once Dr Sattler has been activated, the dinosaurs start flashing and fleeing. The logic for their movement when fleeing from Jeff is the same for all four dinosaurs, and is based on the logic for Dinosaur 1, only reversed. 
@@ -426,6 +464,7 @@ Once Dr Sattler has been activated, the dinosaurs start flashing and fleeing. Th
 
 * otherwise, the dinosaur senses which quadrant relative to herself Jeff is in (e.g. lower right). She then prioritises moving away from Jeff in the two opposite directions (e.g. up and left), and will only move in either of the two other directions if these are blocked.
 
+<a name="win"></a>
 ### Winning the game
 
 If you manage to clear all the eggs, you win. This is tracked using the variable `eggsRemaining`, which keeps track of the number of eggs left on the board. Once this hits 0, the function `youWin()` is called.
@@ -449,13 +488,14 @@ In an early version, I used an alert to show the final score, although I felt th
 ```
  alert(`You won! You scored ${score} and have ${lives} remaining lives for a grand total of ${score + (lives * 1000)}!`)
 ```
-
+<a name="lose"></a>
 ### Losing the game
 
 The function `caughtbyDinosaur()` contains an if statement that calls the function `youLose()` if, after having lost a life, `lives === 0`.
 
 This function stops all movement on the board and, as for winning, an HTML div appears on screen, this time displaying 'Game over'. The play again button is also displayed. 
 
+<a name="sounds"></a>
 ### Sounds
 
 To add to the authentic game experience, I added in sounds to my game. The sounds are included in the HTML using the audio tag, e.g.:
@@ -474,6 +514,7 @@ I used zapsplat.com to source some sounds for in-game actions - collecting eggs,
 
 I wanted certain actions to use Jurassic Park-specific sounds - for example, teaming up with Dr Sattler, which plays the quote from the film, "Mr Hammond, I think we're back in business". I edited the sounds files from clips of Jurassic Park taken from Youtube to create these.
 
+<a name="other"></a>
 ### Other
 
 When the page loads, the instructions are visible, but the game board is not. You click on an icon of Jeff Goldblum to start the game. I created a message that appears on-screen saying 'Go!', delaying the start of the game by two seconds, to give the player time to ready themselves before the game starts.
@@ -506,7 +547,7 @@ window.addEventListener('keydown', function (e) {
   }
 }, false)
 ```
-
+<a name="styling"></a>
 ### Styling
 
 I carefully varied the opacity of my backgrounds and divs to create a pleasing visual effect. 
@@ -517,12 +558,13 @@ I made the logo using a free Jurassic Park themed font from 1001freefonts.com .
 
 All gifs were created by me using ezgif.com .
 
-
+<a name="success"></a>
 ### Successes
 I felt very proud of this project - my first of the Software Engineering Immersive course, and certainly the biggest coding project I'd attempted before. 
 
 I completed this project without much guidance from the instructors, and managed to problem-solve almost every bug without asking for help. I do feel that this was a mixed blessing because while I learned so much during the week, I also recognise that my code is very long-winded and perhaps getting advice while I was writing it could have helped me refactor as I went along.
 
+<a name="learned"></a>
 ### Lessons learned
 
 This project definitely highlighted to me that I need to develop my skills in refactoring. As I was writing some code, I felt like there must be more efficient way, but I didn't know how at the time. For example, the code for dinosaur movement is very repetitive. This is something I could definitely go back and refactor in the future.
@@ -531,6 +573,7 @@ I also learned a lot about keeping track of a large document. I found myself str
 
 I found myself using several setIntervals set to 1ms as a way of checking the current state of play of the game. As previously noted, this is probably excessive (every 100ms would probably suffice), but this did solve the problem of events not being noticed due to timing. I've heard that React.js, which we'll be learning about after this project, can provide solutions to this by removing the need for separate steps for tracking location (e.g. `jeffPosition`) and adding classes (e.g. `cells[jeffPosition].classList.add('jeff')`).
 
+<a name="future"></a>
 ### Ideas for future development
 Refactoring this project is my first priority - particularly the code for dinosaur movement!
 
