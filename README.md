@@ -88,7 +88,7 @@ for (let i = 0; i < gridCellCount; i++) {
 
 The class 'food' is added to all remaining cells, which signifies the cells which contain an egg to be collected. This creates our starting layout:
 
-![Cities Page](images/screenshots/BoardLayout.png)
+![Board Layout](images/screenshots/BoardLayout.png)
   
 
 ## Navigating the board
@@ -169,7 +169,7 @@ if (cells[jeffPosition].classList.contains('special') && !pauseDinoMovement) {
 
 `!pauseDinoMovement` means that the code only runs if the dinosaurs are not already paused - i.e. if Dr Sattler is not already assisting. I considered being able to 'stack' these rewards by extending the setTimeout but decided against it for this first version, as it's simpler - it's something I'll consider adding in future versions!
 
-![Cities Page](images/screenshots/Flashing.gif)
+![Flashing dinosaurs](images/screenshots/Flashing.gif)
 
 The function `runSpecial()` first checks the game hasn't ended, using the same code as for Jeff's movement. It then removes the Dr Sattler icon, increases the player score by 1000, and pauses dinosaur movement. Each cell that contains a dinosaur icon is replaced with a flashing version of that icon:
 
@@ -273,7 +273,7 @@ The most complex challenge of this project was creating a successful algorithm f
 
 I initially programmed the first dinosaur - a green Tyrannosaurus Rex - using code that followed the structure of a large flow chart I had drawn up. 
 
-![Cities Page](images/screenshots/Dino-plan.JPG) 
+![Dinosaur movement plan](images/screenshots/Dino-plan.JPG) 
 
 * First, the dinosaur checks whether Jeff is in the same row as her, and if he is, she moves towards him if the route is clear. 
 
