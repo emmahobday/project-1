@@ -264,7 +264,7 @@ livesDisplay.innerHTML = `${'&hearts; '.repeat(lives)}`
 It then checks how many lives are remaining: 
 
 * 0 lives remaining: then the function `youLose()` is called
-* > 0 lives remaining:  after two seconds (to allow the user time to recognise what's happened) all characters are returned to their starting points, and all movement is un-paused and restarted.
+* More than 0 lives remaining:  after two seconds (to allow the user time to recognise what's happened) all characters are returned to their starting points, and all movement is un-paused and restarted.
 
 ### Dinosaur movement
 The most complex challenge of this project was creating a successful algorithm for the dinosaurs' movement. They needed to roam around the board intelligently, moving towards Jeff Goldblum - an ever-moving target - while respecting the rules of the board. In addition to intelligent movement, I wanted a random element at times to make the dinosaurs less predictable.
