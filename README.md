@@ -273,7 +273,7 @@ The most complex challenge of this project was creating a successful algorithm f
 
 I initially programmed the first dinosaur - a green Tyrannosaurus Rex - using code that followed the structure of a large flow chart I had drawn up. 
 
-![Dinosaur movement plan](images/screenshots/Dino-plan.JPG) 
+![Dinosaur movement plan](images/screenshots/Dino-plan.jpg) 
 
 * First, the dinosaur checks whether Jeff is in the same row as her, and if he is, she moves towards him if the route is clear. 
 
